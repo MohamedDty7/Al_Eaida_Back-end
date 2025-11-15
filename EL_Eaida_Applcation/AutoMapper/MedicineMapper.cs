@@ -14,10 +14,24 @@ namespace EL_Eaida_Applcation.AutoMapper
     {
         public MedicineMapper()
         {
-            CreateMap<Medicine, CreateMedicineDTO>().ReverseMap();
-            CreateMap<UpDateMedicineDTO, Medicine>().
-                ReverseMap();
-            CreateMap<Medicine, MedicineDTO>().ReverseMap();
+            CreateMap<Medicine, MedicineDTO>();
+            
+            CreateMap<CreateMedicineDTO, Medicine>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Prescriptions, opt => opt.Ignore())
+                .ForMember(dest => dest.PrescriptionItems, opt => opt.Ignore())
+                .ForMember(dest => dest.MedicationCategories, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
+                
+            CreateMap<UpdateMedicineDTO, Medicine>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Prescriptions, opt => opt.Ignore())
+                .ForMember(dest => dest.PrescriptionItems, opt => opt.Ignore())
+                .ForMember(dest => dest.MedicationCategories, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
   

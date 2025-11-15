@@ -13,7 +13,8 @@ namespace EL_Eaida_Applcation.DTO.MedicalVisitDTO
         public string? Notes { get; set; }
 
         public Guid PatientId { get; set; }
-        public string UserID { get; set; } // ID الطبيب
+        public string UserID { get; set; } = string.Empty; // ID الطبيب
+        public string DoctorID { get; set; } = string.Empty;
     }
 
 }

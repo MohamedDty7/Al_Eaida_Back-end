@@ -25,14 +25,65 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Al_Eaida_Domin.Modules.Appointment", b =>
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Address", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CityId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid?>("GovernorateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ZipCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("CityId1");
+
+                    b.HasIndex("GovernorateId");
+
+                    b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Appointment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
                     b.Property<DateTime>("AppointmentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
@@ -40,7 +91,18 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ReceptionistId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Time")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -54,12 +116,65 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
 
                     b.HasIndex("PatientId");
 
+                    b.HasIndex("ReceptionistId");
+
                     b.HasIndex("UserID");
+
+                    b.HasIndex("DoctorId", "AppointmentDate", "Time")
+                        .IsUnique();
 
                     b.ToTable("Appointments");
                 });
 
-            modelBuilder.Entity("Al_Eaida_Domin.Modules.Invoice", b =>
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.AuditLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("NewValues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldValues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecordId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserAgent")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AuditLogs");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -70,26 +185,3488 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.City", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid>("GovernorateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameEn")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GovernorateId");
+
+                    b.ToTable("Cities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("66439646-6aa7-49a5-818d-d610a40a8a2f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1623),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "15 مايو",
+                            NameEn = "15 May"
+                        },
+                        new
+                        {
+                            Id = new Guid("eb4037e3-152a-4bee-8711-6030247f3ae9"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1643),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الازبكية",
+                            NameEn = "Al Azbakeyah"
+                        },
+                        new
+                        {
+                            Id = new Guid("26966092-b980-48cc-9660-b674c71cc9c3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1645),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "البساتين",
+                            NameEn = "Al Basatin"
+                        },
+                        new
+                        {
+                            Id = new Guid("24c51ac5-37b3-451b-a6f7-ac1a246c0443"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1647),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "التبين",
+                            NameEn = "Tebin"
+                        },
+                        new
+                        {
+                            Id = new Guid("d0bdd33e-4dc9-449b-b5f4-48317397af06"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1650),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الخليفة",
+                            NameEn = "El-Khalifa"
+                        },
+                        new
+                        {
+                            Id = new Guid("ac5b37a4-aee9-4f62-bf11-784cc69a2dbd"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1654),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الدراسة",
+                            NameEn = "El darrasa"
+                        },
+                        new
+                        {
+                            Id = new Guid("f3ce1c54-b43f-4e00-ab2d-5d9d4fb4d96f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1656),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الدرب الاحمر",
+                            NameEn = "Aldarb Alahmar"
+                        },
+                        new
+                        {
+                            Id = new Guid("ab0e9098-4ff7-4333-8aee-a5386950b9f5"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1660),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الزاوية الحمراء",
+                            NameEn = "Zawya al-Hamra"
+                        },
+                        new
+                        {
+                            Id = new Guid("1048cf8d-a54f-4fa8-8e84-206e24f4f2bc"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1662),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الزيتون",
+                            NameEn = "El-Zaytoun"
+                        },
+                        new
+                        {
+                            Id = new Guid("d88c75a8-d2ea-4340-87d5-398b4fe7a71a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1666),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الساحل",
+                            NameEn = "Sahel"
+                        },
+                        new
+                        {
+                            Id = new Guid("fb0606b0-09e4-4b4f-a8a4-85bee0785630"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1668),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "السلام",
+                            NameEn = "El Salam"
+                        },
+                        new
+                        {
+                            Id = new Guid("199c0a0e-0e2e-4bbe-8f6d-124ebd8460ed"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1670),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "السيدة زينب",
+                            NameEn = "Sayeda Zeinab"
+                        },
+                        new
+                        {
+                            Id = new Guid("9c1e86a6-5338-4590-ae49-e66c946d9b75"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1672),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الشرابية",
+                            NameEn = "El Sharabeya"
+                        },
+                        new
+                        {
+                            Id = new Guid("1e928dd7-9865-4ce6-996b-6524fbdf68f8"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1676),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "مدينة الشروق",
+                            NameEn = "Shorouk"
+                        },
+                        new
+                        {
+                            Id = new Guid("101dca1a-c78f-4a73-ad97-74ce484e1352"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1678),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الظاهر",
+                            NameEn = "El Daher"
+                        },
+                        new
+                        {
+                            Id = new Guid("8bd9a6d8-69d1-44bc-9fdb-f9f1e4ee3d57"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1680),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "العتبة",
+                            NameEn = "Ataba"
+                        },
+                        new
+                        {
+                            Id = new Guid("8992923d-c323-4370-828a-7f94dc3b31ec"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1682),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "القاهرة الجديدة",
+                            NameEn = "New Cairo"
+                        },
+                        new
+                        {
+                            Id = new Guid("6bcf5664-93f6-4879-a304-fb7be526d482"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1686),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "المرج",
+                            NameEn = "El Marg"
+                        },
+                        new
+                        {
+                            Id = new Guid("4ca58de7-d30d-41ee-b109-fe029e9faebb"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1688),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "عزبة النخل",
+                            NameEn = "Ezbet el Nakhl"
+                        },
+                        new
+                        {
+                            Id = new Guid("b28f9b5e-e91c-42a7-876f-279315670945"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1690),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "المطرية",
+                            NameEn = "Matareya"
+                        },
+                        new
+                        {
+                            Id = new Guid("2028da0b-e808-434c-a3f5-54f08b828908"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1692),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "المعادى",
+                            NameEn = "Maadi"
+                        },
+                        new
+                        {
+                            Id = new Guid("0bf7ae7a-dee4-451c-9688-b84cbfce992b"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1696),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "المعصرة",
+                            NameEn = "Maasara"
+                        },
+                        new
+                        {
+                            Id = new Guid("09346925-4843-4ce5-a57d-3dd38b9bf349"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1698),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "المقطم",
+                            NameEn = "Mokattam"
+                        },
+                        new
+                        {
+                            Id = new Guid("fdf5bc0e-86d7-4609-8ff4-c951a43a7f29"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1700),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "المنيل",
+                            NameEn = "Manyal"
+                        },
+                        new
+                        {
+                            Id = new Guid("4defe172-5420-457d-a468-99139af42a7d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1703),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الموسكى",
+                            NameEn = "Mosky"
+                        },
+                        new
+                        {
+                            Id = new Guid("37722a9b-e668-4619-9652-213b8926b226"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1706),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "النزهة",
+                            NameEn = "Nozha"
+                        },
+                        new
+                        {
+                            Id = new Guid("92636c93-e77a-4229-977e-66aac3272c1d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1708),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الوايلى",
+                            NameEn = "Waily"
+                        },
+                        new
+                        {
+                            Id = new Guid("e912c737-9325-4bb0-bbe0-2769eb45766d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1710),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "باب الشعرية",
+                            NameEn = "Bab al-Shereia"
+                        },
+                        new
+                        {
+                            Id = new Guid("bb928341-83dc-4e29-855f-6680c804db24"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1712),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "بولاق",
+                            NameEn = "Bolaq"
+                        },
+                        new
+                        {
+                            Id = new Guid("bedb6607-7f1c-45e1-a87c-22a47cd1c67d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1716),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "جاردن سيتى",
+                            NameEn = "Garden City"
+                        },
+                        new
+                        {
+                            Id = new Guid("74f9f557-edb1-4bac-8c1e-65b71a4b4a1f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1718),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "حدائق القبة",
+                            NameEn = "Hadayek El-Kobba"
+                        },
+                        new
+                        {
+                            Id = new Guid("cdff6038-8916-4ba9-9e04-62d63347f912"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1720),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "حلوان",
+                            NameEn = "Helwan"
+                        },
+                        new
+                        {
+                            Id = new Guid("7747cba1-e3e1-4a63-a1da-56fecd3c1b3e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1722),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "دار السلام",
+                            NameEn = "Dar Al Salam"
+                        },
+                        new
+                        {
+                            Id = new Guid("dd806e9a-9a36-49a7-b104-78930af9a7e6"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1726),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "شبرا",
+                            NameEn = "Shubra"
+                        },
+                        new
+                        {
+                            Id = new Guid("c1b5dee6-a691-4bf2-8df8-d0bdfb948d85"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1728),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "طره",
+                            NameEn = "Tura"
+                        },
+                        new
+                        {
+                            Id = new Guid("d9293789-fe6e-45f7-9f82-cb33fd7e0ddd"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1730),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "عابدين",
+                            NameEn = "Abdeen"
+                        },
+                        new
+                        {
+                            Id = new Guid("c0d25a43-8de2-4449-8fac-8d2002405d41"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1732),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "عباسية",
+                            NameEn = "Abaseya"
+                        },
+                        new
+                        {
+                            Id = new Guid("1cdfa41b-80da-462b-8d06-151b1939d646"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1736),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "عين شمس",
+                            NameEn = "Ain Shms"
+                        },
+                        new
+                        {
+                            Id = new Guid("6c65ca46-f6f5-4bf7-ac95-9d9f241c7cee"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1738),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "مدينة نصر",
+                            NameEn = "Nasr City"
+                        },
+                        new
+                        {
+                            Id = new Guid("6567da4b-2caa-4a76-a06a-698ee52e0b13"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1740),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "مصر الجديدة",
+                            NameEn = "New Heliopolis"
+                        },
+                        new
+                        {
+                            Id = new Guid("aef2439d-83c0-48db-a0be-9bab2949c6f8"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1742),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "مصر القديمة",
+                            NameEn = "Masr Al Qadima"
+                        },
+                        new
+                        {
+                            Id = new Guid("84f2a1a5-68fb-48fb-a42b-734a8281294b"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1746),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "منشية ناصر",
+                            NameEn = "Mansheya Nasir"
+                        },
+                        new
+                        {
+                            Id = new Guid("b20ac8e4-385b-4756-a584-272e6e34067e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1748),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "مدينة بدر",
+                            NameEn = "Badr City"
+                        },
+                        new
+                        {
+                            Id = new Guid("0f5c09ab-5926-430d-97ca-b47367e4cfd3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1750),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "مدينة العبور",
+                            NameEn = "Obour City"
+                        },
+                        new
+                        {
+                            Id = new Guid("f02d070f-c878-49da-aade-c89f5b9a53e1"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1758),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "وسط البلد",
+                            NameEn = "Cairo Downtown"
+                        },
+                        new
+                        {
+                            Id = new Guid("06b85942-2996-45f9-b013-dfa86e087b08"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1762),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الزمالك",
+                            NameEn = "Zamalek"
+                        },
+                        new
+                        {
+                            Id = new Guid("6bab781c-c085-4b85-bbd9-0196f5dd7321"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1764),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "قصر النيل",
+                            NameEn = "Kasr El Nile"
+                        },
+                        new
+                        {
+                            Id = new Guid("1dd75baf-dada-49dc-84f6-31c93fab6eaf"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1766),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الرحاب",
+                            NameEn = "Rehab"
+                        },
+                        new
+                        {
+                            Id = new Guid("62f4c90f-aaaa-4f31-9bb7-80da340ee8a7"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1768),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "القطامية",
+                            NameEn = "Katameya"
+                        },
+                        new
+                        {
+                            Id = new Guid("6b2b35aa-ecdb-41db-978b-ecfa1b84381f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1772),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "مدينتي",
+                            NameEn = "Madinty"
+                        },
+                        new
+                        {
+                            Id = new Guid("ab28d7f3-fe11-4be7-a0a8-71436f35ce60"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1774),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "روض الفرج",
+                            NameEn = "Rod Alfarag"
+                        },
+                        new
+                        {
+                            Id = new Guid("b05e5d94-2c0e-4e7a-a8d7-700e2d142b53"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1776),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "شيراتون",
+                            NameEn = "Sheraton"
+                        },
+                        new
+                        {
+                            Id = new Guid("eef723bb-6807-4519-a233-d884b77744ef"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1778),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الجمالية",
+                            NameEn = "El-Gamaleya"
+                        },
+                        new
+                        {
+                            Id = new Guid("1bf9b182-2f28-431c-97ab-777a38b67aef"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1783),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "العاشر من رمضان",
+                            NameEn = "10th of Ramadan City"
+                        },
+                        new
+                        {
+                            Id = new Guid("1e618395-22a4-4f6d-bf52-bbe1f365da1f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1785),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "الحلمية",
+                            NameEn = "Helmeyat Alzaytoun"
+                        },
+                        new
+                        {
+                            Id = new Guid("411d4556-0999-4e86-bd2b-9a9f1fbdaaa6"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1787),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "النزهة الجديدة",
+                            NameEn = "New Nozha"
+                        },
+                        new
+                        {
+                            Id = new Guid("81f996c7-d67c-4cf8-b939-7d3f9cbb96fd"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1789),
+                            GovernorateId = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            NameAr = "العاصمة الإدارية",
+                            NameEn = "Capital New"
+                        },
+                        new
+                        {
+                            Id = new Guid("c360ff54-1a17-424a-8170-eaa03d6c6e66"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1852),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "الجيزة",
+                            NameEn = "Giza"
+                        },
+                        new
+                        {
+                            Id = new Guid("db67c108-503f-428b-8daf-cf3b9c710f71"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1855),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "السادس من أكتوبر",
+                            NameEn = "Sixth of October"
+                        },
+                        new
+                        {
+                            Id = new Guid("2476f339-f4b7-47b3-9fc0-a35ae14d8e8b"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1857),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "الشيخ زايد",
+                            NameEn = "Cheikh Zayed"
+                        },
+                        new
+                        {
+                            Id = new Guid("d2c7535b-e825-46e1-bc4c-ccf450ec0834"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1859),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "الحوامدية",
+                            NameEn = "Hawamdiyah"
+                        },
+                        new
+                        {
+                            Id = new Guid("3790c982-ea7c-4cd6-bc3d-75a9724a3424"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1863),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "البدرشين",
+                            NameEn = "Al Badrasheen"
+                        },
+                        new
+                        {
+                            Id = new Guid("dcdf05ae-6abb-485c-b1b5-c8a40227dfd6"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1865),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "الصف",
+                            NameEn = "Saf"
+                        },
+                        new
+                        {
+                            Id = new Guid("dd216a69-e204-4eb2-99d7-26856f225cd1"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1868),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "أطفيح",
+                            NameEn = "Atfih"
+                        },
+                        new
+                        {
+                            Id = new Guid("140cbf4a-0260-49b9-8ed0-90333f636a21"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1870),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "العياط",
+                            NameEn = "Al Ayat"
+                        },
+                        new
+                        {
+                            Id = new Guid("1a021932-3cbd-4252-b56d-9b80e1c1f87a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1874),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "الباويطي",
+                            NameEn = "Al-Bawaiti"
+                        },
+                        new
+                        {
+                            Id = new Guid("063f2d7c-117e-40f6-a3b5-06af8fde985d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1876),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "منشأة القناطر",
+                            NameEn = "ManshiyetAl Qanater"
+                        },
+                        new
+                        {
+                            Id = new Guid("09cb46d0-3b58-42b7-8cf1-970d97e4d869"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1878),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "أوسيم",
+                            NameEn = "Oaseem"
+                        },
+                        new
+                        {
+                            Id = new Guid("b59ee525-fd58-4299-a1ad-1ced2c66f826"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1880),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "كرداسة",
+                            NameEn = "Kerdasa"
+                        },
+                        new
+                        {
+                            Id = new Guid("9baaddd9-8f99-4105-b690-3e05710115e7"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1884),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "أبو النمرس",
+                            NameEn = "Abu Nomros"
+                        },
+                        new
+                        {
+                            Id = new Guid("237adde7-211e-4220-896a-60d90bd1b478"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1886),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "كفر غطاطي",
+                            NameEn = "Kafr Ghati"
+                        },
+                        new
+                        {
+                            Id = new Guid("7ffeb2dc-a4ab-4f13-bb61-d05ad06898f0"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1888),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "منشأة البكاري",
+                            NameEn = "Manshiyet Al Bakari"
+                        },
+                        new
+                        {
+                            Id = new Guid("aae3dc0e-c44e-4da9-9194-51f09e4beef8"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1891),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "الدقى",
+                            NameEn = "Dokki"
+                        },
+                        new
+                        {
+                            Id = new Guid("9dab8131-3533-4aab-966e-bc6f5c922967"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1894),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "العجوزة",
+                            NameEn = "Agouza"
+                        },
+                        new
+                        {
+                            Id = new Guid("abaf4a4e-1972-49b7-b9ea-a107fe85cf6e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1897),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "الهرم",
+                            NameEn = "Haram"
+                        },
+                        new
+                        {
+                            Id = new Guid("0def2fd7-dca9-4507-81e3-670039b944af"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1899),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "الوراق",
+                            NameEn = "Warraq"
+                        },
+                        new
+                        {
+                            Id = new Guid("cc074c83-98fa-408b-8c41-66a18b0c6441"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1901),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "امبابة",
+                            NameEn = "Imbaba"
+                        },
+                        new
+                        {
+                            Id = new Guid("2b236527-06e1-47fa-b1fc-0ce49e9a22b5"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1905),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "بولاق الدكرور",
+                            NameEn = "Boulaq Dakrour"
+                        },
+                        new
+                        {
+                            Id = new Guid("4214efcd-7aaf-4692-87b8-2145d36c1737"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1908),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "الواحات البحرية",
+                            NameEn = "Al Wahat Al Baharia"
+                        },
+                        new
+                        {
+                            Id = new Guid("7d27c5ff-b8c6-4f69-81c8-403d0f10af51"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1910),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "العمرانية",
+                            NameEn = "Omraneya"
+                        },
+                        new
+                        {
+                            Id = new Guid("e3fa64aa-54ee-4e86-ba40-aff4c0cdfd75"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1912),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "المنيب",
+                            NameEn = "Moneeb"
+                        },
+                        new
+                        {
+                            Id = new Guid("fb5e7798-b325-4344-a49d-af2594b78efa"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1916),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "بين السرايات",
+                            NameEn = "Bin Alsarayat"
+                        },
+                        new
+                        {
+                            Id = new Guid("5ab0a972-afc2-43dc-a653-7b4d931aad18"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1918),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "الكيت كات",
+                            NameEn = "Kit Kat"
+                        },
+                        new
+                        {
+                            Id = new Guid("5620b904-9be2-49ab-aff8-3d470040a995"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1920),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "المهندسين",
+                            NameEn = "Mohandessin"
+                        },
+                        new
+                        {
+                            Id = new Guid("fdd8f0d9-9060-4419-9188-d9e0b2361161"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1922),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "فيصل",
+                            NameEn = "Faisal"
+                        },
+                        new
+                        {
+                            Id = new Guid("52fe6cd0-2b12-4925-b1c7-aeb5f640c6c3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1925),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "أبو رواش",
+                            NameEn = "Abu Rawash"
+                        },
+                        new
+                        {
+                            Id = new Guid("edb51dda-06ec-4182-900b-5ed405c4c613"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1928),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "حدائق الأهرام",
+                            NameEn = "Hadayek Alahram"
+                        },
+                        new
+                        {
+                            Id = new Guid("5926c230-35f6-4b3e-9e48-5b4221e140bf"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1930),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "الحرانية",
+                            NameEn = "Haraneya"
+                        },
+                        new
+                        {
+                            Id = new Guid("f999c580-3661-4255-b6e7-38810e347897"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1932),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "حدائق اكتوبر",
+                            NameEn = "Hadayek October"
+                        },
+                        new
+                        {
+                            Id = new Guid("9d7cf7b3-2606-44e1-82bd-f69776e1a07e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1935),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "صفط اللبن",
+                            NameEn = "Saft Allaban"
+                        },
+                        new
+                        {
+                            Id = new Guid("1a96b6b5-db0c-48b5-b323-eec67266a0b0"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1937),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "القرية الذكية",
+                            NameEn = "Smart Village"
+                        },
+                        new
+                        {
+                            Id = new Guid("43ebb836-43b4-4aac-93a2-39c14539ea7a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1940),
+                            GovernorateId = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            NameAr = "ارض اللواء",
+                            NameEn = "Ard Ellwaa"
+                        },
+                        new
+                        {
+                            Id = new Guid("87c44d2e-033d-4464-a797-6adf4f07ccdd"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1985),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "الإسكندرية",
+                            NameEn = "Alexandria"
+                        },
+                        new
+                        {
+                            Id = new Guid("641e6fb9-1ad4-4a86-8fbb-2bab0533ffd7"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1990),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "برج العرب",
+                            NameEn = "Borg El Arab"
+                        },
+                        new
+                        {
+                            Id = new Guid("e3dc85bd-a37a-4ae2-95ef-cc7e8981a716"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1993),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "برج العرب الجديدة",
+                            NameEn = "New Borg El Arab"
+                        },
+                        new
+                        {
+                            Id = new Guid("fdb97dfb-5ea0-4015-a61b-379f958b7d80"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1995),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "العامرية",
+                            NameEn = "Amreya"
+                        },
+                        new
+                        {
+                            Id = new Guid("c1b2c7ce-5c2d-42d2-9702-b6bab7ec83c7"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1997),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "الأنفوشي",
+                            NameEn = "Anfoushi"
+                        },
+                        new
+                        {
+                            Id = new Guid("b74f66dd-a2cd-4cdf-971d-97c61881f1b0"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2001),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "العصافرة",
+                            NameEn = "Asafra"
+                        },
+                        new
+                        {
+                            Id = new Guid("77cb5d52-7e71-46d5-b83a-773985b25ac8"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2003),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "العطارين",
+                            NameEn = "Attarin"
+                        },
+                        new
+                        {
+                            Id = new Guid("91622c8e-f241-48bb-af5c-824c32cb3e45"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2005),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "أبو قير",
+                            NameEn = "Abu Qir"
+                        },
+                        new
+                        {
+                            Id = new Guid("686a7236-15fd-4401-a125-8af888f04dd2"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2007),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "باكوس",
+                            NameEn = "Bakos"
+                        },
+                        new
+                        {
+                            Id = new Guid("75921483-506d-4a06-a600-33f463d2eca6"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2010),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "بولكلي",
+                            NameEn = "Bolkly"
+                        },
+                        new
+                        {
+                            Id = new Guid("ce8a2172-bc03-43a0-b8b4-c250482171c2"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2013),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "كليوباترا",
+                            NameEn = "Cleopatra"
+                        },
+                        new
+                        {
+                            Id = new Guid("1f44fe38-a7e9-4b17-a2cd-7dbe281d5e06"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2015),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "الدخيلة",
+                            NameEn = "Dekheila"
+                        },
+                        new
+                        {
+                            Id = new Guid("c971cc9c-e901-450b-876a-a7b806feac71"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2017),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "الرمل",
+                            NameEn = "El Raml"
+                        },
+                        new
+                        {
+                            Id = new Guid("9101a1a4-684a-4487-a2e8-a0771a46d053"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2020),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "فلمنج",
+                            NameEn = "Fleming"
+                        },
+                        new
+                        {
+                            Id = new Guid("ffb59f9b-ae09-4ca5-a152-4a2b6631afb6"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2022),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "جناكليس",
+                            NameEn = "Gianaclis"
+                        },
+                        new
+                        {
+                            Id = new Guid("cfca7da5-68ba-456f-888a-f04de379d056"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2024),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "جليم",
+                            NameEn = "Gleem"
+                        },
+                        new
+                        {
+                            Id = new Guid("9a00b1c1-a199-4f4d-a607-979b57c30ffa"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2030),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "المنتزه",
+                            NameEn = "Montaza"
+                        },
+                        new
+                        {
+                            Id = new Guid("55a7b36d-b649-484c-a4f8-dc836ca3f3a2"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2034),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "المكس",
+                            NameEn = "Maks"
+                        },
+                        new
+                        {
+                            Id = new Guid("2ab7a135-c8f4-4fd3-b439-16cb21e87635"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2036),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "المندرة",
+                            NameEn = "Mandara"
+                        },
+                        new
+                        {
+                            Id = new Guid("689016e1-c434-4796-9161-3f62470825c2"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2038),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "محرم بك",
+                            NameEn = "Moharam Bek"
+                        },
+                        new
+                        {
+                            Id = new Guid("f9f704c7-2db9-4ced-acfa-d92d009887b9"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2040),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "الورديان",
+                            NameEn = "Wardian"
+                        },
+                        new
+                        {
+                            Id = new Guid("460a9bbb-6d5b-47fe-a3a2-3d2bf013de5b"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2044),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "سيدي بشر",
+                            NameEn = "Sidi Bishr"
+                        },
+                        new
+                        {
+                            Id = new Guid("1890b7a8-ca00-4ca3-aef9-09f2aba4befd"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2046),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "سيدي جابر",
+                            NameEn = "Sidi Gaber"
+                        },
+                        new
+                        {
+                            Id = new Guid("0233e78c-4f33-4bb2-b6c7-a1c8a0ad53f7"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2048),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "سموحة",
+                            NameEn = "Smouha"
+                        },
+                        new
+                        {
+                            Id = new Guid("2dad352a-f1d4-402a-b05b-ec454cd4d584"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2050),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "ستانلي",
+                            NameEn = "Stanley"
+                        },
+                        new
+                        {
+                            Id = new Guid("3efdf6d8-7ba0-4148-ab6d-6bbf96222007"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2054),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "سيدي كرير",
+                            NameEn = "Sidi Kerir"
+                        },
+                        new
+                        {
+                            Id = new Guid("5c3505b6-b788-45a3-b405-1f95f8705f20"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2056),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "سيدي كرير الجديدة",
+                            NameEn = "New Sidi Kerir"
+                        },
+                        new
+                        {
+                            Id = new Guid("3afce07b-6c60-49c9-9868-1708fd145f4a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2058),
+                            GovernorateId = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            NameAr = "الزيتون",
+                            NameEn = "Zaytoun"
+                        },
+                        new
+                        {
+                            Id = new Guid("c16ba371-4c80-469b-9796-b9f0056fa17a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2099),
+                            GovernorateId = new Guid("38ecf431-44e1-4a58-a05a-af8ac4c057d7"),
+                            NameAr = "المنصورة",
+                            NameEn = "Mansoura"
+                        },
+                        new
+                        {
+                            Id = new Guid("47fcce21-e733-4c85-82c2-1e720fab213a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2104),
+                            GovernorateId = new Guid("38ecf431-44e1-4a58-a05a-af8ac4c057d7"),
+                            NameAr = "أجا",
+                            NameEn = "Aga"
+                        },
+                        new
+                        {
+                            Id = new Guid("77f09d11-1ebc-442d-b578-20ee1c056b68"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2106),
+                            GovernorateId = new Guid("38ecf431-44e1-4a58-a05a-af8ac4c057d7"),
+                            NameAr = "السنبلاوين",
+                            NameEn = "Sinbillawin"
+                        },
+                        new
+                        {
+                            Id = new Guid("1915fd14-a733-44cf-af29-efdace874d08"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2108),
+                            GovernorateId = new Guid("38ecf431-44e1-4a58-a05a-af8ac4c057d7"),
+                            NameAr = "المنزلة",
+                            NameEn = "Manzala"
+                        },
+                        new
+                        {
+                            Id = new Guid("602847b5-efb8-4418-9fb2-2b502e43b8cd"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2111),
+                            GovernorateId = new Guid("38ecf431-44e1-4a58-a05a-af8ac4c057d7"),
+                            NameAr = "ميت غمر",
+                            NameEn = "Mit Ghamr"
+                        },
+                        new
+                        {
+                            Id = new Guid("8fd00cd2-5796-443f-b565-0dd6b4abe0f3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2115),
+                            GovernorateId = new Guid("38ecf431-44e1-4a58-a05a-af8ac4c057d7"),
+                            NameAr = "دكرنس",
+                            NameEn = "Dekernes"
+                        },
+                        new
+                        {
+                            Id = new Guid("ad69045d-197c-420c-945d-0fa2172afb6a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2117),
+                            GovernorateId = new Guid("38ecf431-44e1-4a58-a05a-af8ac4c057d7"),
+                            NameAr = "المنصورة الجديدة",
+                            NameEn = "New Mansoura"
+                        },
+                        new
+                        {
+                            Id = new Guid("aeba2b4c-2d61-4b12-ba6e-e7e99da296b1"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2119),
+                            GovernorateId = new Guid("38ecf431-44e1-4a58-a05a-af8ac4c057d7"),
+                            NameAr = "طلخا",
+                            NameEn = "Talkha"
+                        },
+                        new
+                        {
+                            Id = new Guid("4ec5ccc7-8814-4489-a051-c44a76f4e41e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2122),
+                            GovernorateId = new Guid("38ecf431-44e1-4a58-a05a-af8ac4c057d7"),
+                            NameAr = "ميت سلسيل",
+                            NameEn = "Mit Salsil"
+                        },
+                        new
+                        {
+                            Id = new Guid("82b0b1ff-0cc5-42b9-8da6-11ff16f79430"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2125),
+                            GovernorateId = new Guid("38ecf431-44e1-4a58-a05a-af8ac4c057d7"),
+                            NameAr = "المنصورة القديمة",
+                            NameEn = "Old Mansoura"
+                        },
+                        new
+                        {
+                            Id = new Guid("8f5efa41-bf87-44dd-ab75-370c628f7bac"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2151),
+                            GovernorateId = new Guid("6721681d-d5b6-4484-a92d-a5fc406dc2b8"),
+                            NameAr = "الغردقة",
+                            NameEn = "Hurghada"
+                        },
+                        new
+                        {
+                            Id = new Guid("29deab87-e38f-4ac3-b3ae-f96baf3e17c9"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2154),
+                            GovernorateId = new Guid("6721681d-d5b6-4484-a92d-a5fc406dc2b8"),
+                            NameAr = "رأس غارب",
+                            NameEn = "Ras Gharib"
+                        },
+                        new
+                        {
+                            Id = new Guid("aeceb47b-2f07-4552-9e93-795ee0556c97"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2156),
+                            GovernorateId = new Guid("6721681d-d5b6-4484-a92d-a5fc406dc2b8"),
+                            NameAr = "سفاجا",
+                            NameEn = "Safaga"
+                        },
+                        new
+                        {
+                            Id = new Guid("7355115a-6c22-4e12-b8fc-db00335d8e30"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2165),
+                            GovernorateId = new Guid("6721681d-d5b6-4484-a92d-a5fc406dc2b8"),
+                            NameAr = "القصير",
+                            NameEn = "Quseir"
+                        },
+                        new
+                        {
+                            Id = new Guid("8bde4ce5-1979-4b9f-8e33-958bca692436"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2167),
+                            GovernorateId = new Guid("6721681d-d5b6-4484-a92d-a5fc406dc2b8"),
+                            NameAr = "مرسى علم",
+                            NameEn = "Marsa Alam"
+                        },
+                        new
+                        {
+                            Id = new Guid("d43c2e4d-ba7c-4252-aab0-977d9687ebd1"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2170),
+                            GovernorateId = new Guid("6721681d-d5b6-4484-a92d-a5fc406dc2b8"),
+                            NameAr = "شلاتين",
+                            NameEn = "Shalateen"
+                        },
+                        new
+                        {
+                            Id = new Guid("41a24d93-5d05-4c11-9738-28c92397bf6d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2172),
+                            GovernorateId = new Guid("6721681d-d5b6-4484-a92d-a5fc406dc2b8"),
+                            NameAr = "حلايب",
+                            NameEn = "Halayeb"
+                        },
+                        new
+                        {
+                            Id = new Guid("97195feb-36ee-4372-ad30-15e390bcfa67"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2197),
+                            GovernorateId = new Guid("1bb5a834-9bdf-4949-9d3d-edf13fab3725"),
+                            NameAr = "دمنهور",
+                            NameEn = "Damanhur"
+                        },
+                        new
+                        {
+                            Id = new Guid("bd58b6ff-5850-4fdd-b3a4-ac953528da19"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2199),
+                            GovernorateId = new Guid("1bb5a834-9bdf-4949-9d3d-edf13fab3725"),
+                            NameAr = "رشيد",
+                            NameEn = "Rashid"
+                        },
+                        new
+                        {
+                            Id = new Guid("6b1f7a38-b072-450b-80e9-e3997654f2dc"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2201),
+                            GovernorateId = new Guid("1bb5a834-9bdf-4949-9d3d-edf13fab3725"),
+                            NameAr = "كفر الدوار",
+                            NameEn = "Kafr El Dawwar"
+                        },
+                        new
+                        {
+                            Id = new Guid("c3c7c638-220d-46be-9d6e-a24e334e5360"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2205),
+                            GovernorateId = new Guid("1bb5a834-9bdf-4949-9d3d-edf13fab3725"),
+                            NameAr = "إدكو",
+                            NameEn = "Edku"
+                        },
+                        new
+                        {
+                            Id = new Guid("4dd0c3ff-3edd-49ae-9dca-e16578e83fde"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2209),
+                            GovernorateId = new Guid("1bb5a834-9bdf-4949-9d3d-edf13fab3725"),
+                            NameAr = "أبو المطامير",
+                            NameEn = "Abu El Matamir"
+                        },
+                        new
+                        {
+                            Id = new Guid("a33970e8-bb05-4956-b59a-29029108526c"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2211),
+                            GovernorateId = new Guid("1bb5a834-9bdf-4949-9d3d-edf13fab3725"),
+                            NameAr = "النوبارية الجديدة",
+                            NameEn = "New Nubaria"
+                        },
+                        new
+                        {
+                            Id = new Guid("671dd171-8e5a-48c5-ab08-51891b2df4a3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2213),
+                            GovernorateId = new Guid("1bb5a834-9bdf-4949-9d3d-edf13fab3725"),
+                            NameAr = "وادي النطرون",
+                            NameEn = "Wadi El Natrun"
+                        },
+                        new
+                        {
+                            Id = new Guid("e2d3138e-69c1-45b7-80e0-0d2b6c231a70"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2215),
+                            GovernorateId = new Guid("1bb5a834-9bdf-4949-9d3d-edf13fab3725"),
+                            NameAr = "الحمام",
+                            NameEn = "El Hamam"
+                        },
+                        new
+                        {
+                            Id = new Guid("b48587b2-0185-4683-9388-93fb102472f1"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2219),
+                            GovernorateId = new Guid("1bb5a834-9bdf-4949-9d3d-edf13fab3725"),
+                            NameAr = "كوم حمادة",
+                            NameEn = "Kom Hamada"
+                        },
+                        new
+                        {
+                            Id = new Guid("ea847836-f318-476b-a6e6-dd728ff5888f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2221),
+                            GovernorateId = new Guid("1bb5a834-9bdf-4949-9d3d-edf13fab3725"),
+                            NameAr = "الدلنجات",
+                            NameEn = "Delengat"
+                        },
+                        new
+                        {
+                            Id = new Guid("da1502af-1838-4b91-8f54-9e756c4223a9"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2244),
+                            GovernorateId = new Guid("02791f62-3e4f-4beb-bb9c-d36a2b5f5486"),
+                            NameAr = "الفيوم",
+                            NameEn = "Fayoum"
+                        },
+                        new
+                        {
+                            Id = new Guid("aa83d4bd-aa9c-44b2-958a-0d043d9dded2"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2247),
+                            GovernorateId = new Guid("02791f62-3e4f-4beb-bb9c-d36a2b5f5486"),
+                            NameAr = "طامية",
+                            NameEn = "Tamiya"
+                        },
+                        new
+                        {
+                            Id = new Guid("7d945eb7-3a00-43cc-a8c2-5eb132e0268f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2251),
+                            GovernorateId = new Guid("02791f62-3e4f-4beb-bb9c-d36a2b5f5486"),
+                            NameAr = "سنورس",
+                            NameEn = "Senuors"
+                        },
+                        new
+                        {
+                            Id = new Guid("da4a22b4-c569-4f45-8f16-17c5c0d432e8"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2253),
+                            GovernorateId = new Guid("02791f62-3e4f-4beb-bb9c-d36a2b5f5486"),
+                            NameAr = "إطسا",
+                            NameEn = "Itsa"
+                        },
+                        new
+                        {
+                            Id = new Guid("60ff501f-2727-4931-b0e1-b32a3b1b71d1"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2255),
+                            GovernorateId = new Guid("02791f62-3e4f-4beb-bb9c-d36a2b5f5486"),
+                            NameAr = "إبشواي",
+                            NameEn = "Ibshway"
+                        },
+                        new
+                        {
+                            Id = new Guid("abf7a5c3-4822-487d-9ecb-bce96b153b0c"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2258),
+                            GovernorateId = new Guid("02791f62-3e4f-4beb-bb9c-d36a2b5f5486"),
+                            NameAr = "يوسف الصديق",
+                            NameEn = "Yusuf El Sadiq"
+                        },
+                        new
+                        {
+                            Id = new Guid("e886d5b0-ecf1-4664-9c92-9a45bf1f8b66"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2261),
+                            GovernorateId = new Guid("9215b237-8948-4029-a74f-63c811e5c1ce"),
+                            NameAr = "طنطا",
+                            NameEn = "Tanta"
+                        },
+                        new
+                        {
+                            Id = new Guid("e59e85ee-d783-401b-8adc-e9f59b1c960e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2263),
+                            GovernorateId = new Guid("9215b237-8948-4029-a74f-63c811e5c1ce"),
+                            NameAr = "المحلة الكبرى",
+                            NameEn = "Mahalla El Kubra"
+                        },
+                        new
+                        {
+                            Id = new Guid("94c82d45-f990-416d-b565-0563cb958b00"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2265),
+                            GovernorateId = new Guid("9215b237-8948-4029-a74f-63c811e5c1ce"),
+                            NameAr = "كفر الزيات",
+                            NameEn = "Kafr El Zayat"
+                        },
+                        new
+                        {
+                            Id = new Guid("b7923829-ceaf-41ec-82fc-eb36dbbc3f16"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2267),
+                            GovernorateId = new Guid("9215b237-8948-4029-a74f-63c811e5c1ce"),
+                            NameAr = "زفتى",
+                            NameEn = "Zefta"
+                        },
+                        new
+                        {
+                            Id = new Guid("e45ef624-2a30-4dca-96a5-3aea2fe10699"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2272),
+                            GovernorateId = new Guid("9215b237-8948-4029-a74f-63c811e5c1ce"),
+                            NameAr = "السنطة",
+                            NameEn = "Santan"
+                        },
+                        new
+                        {
+                            Id = new Guid("c3a585a7-81c6-4359-b472-51b0c51385db"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2274),
+                            GovernorateId = new Guid("9215b237-8948-4029-a74f-63c811e5c1ce"),
+                            NameAr = "قطور",
+                            NameEn = "Qutur"
+                        },
+                        new
+                        {
+                            Id = new Guid("f99fcab7-41aa-44a4-b0d5-4a02f34d9f3d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2276),
+                            GovernorateId = new Guid("9215b237-8948-4029-a74f-63c811e5c1ce"),
+                            NameAr = "بسيون",
+                            NameEn = "Basyoun"
+                        },
+                        new
+                        {
+                            Id = new Guid("867726e3-6b95-42bc-ac91-cbecd12c8f27"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2278),
+                            GovernorateId = new Guid("9215b237-8948-4029-a74f-63c811e5c1ce"),
+                            NameAr = "سمنود",
+                            NameEn = "Samannoud"
+                        },
+                        new
+                        {
+                            Id = new Guid("a597a66b-0e1b-4429-ad06-fe103f6d3e07"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2282),
+                            GovernorateId = new Guid("7297db33-8ab2-4421-ad3d-d8cf812fcdc6"),
+                            NameAr = "الإسماعيلية",
+                            NameEn = "Ismailia"
+                        },
+                        new
+                        {
+                            Id = new Guid("0625733e-b54b-4496-a30f-d417fe638eaa"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2285),
+                            GovernorateId = new Guid("7297db33-8ab2-4421-ad3d-d8cf812fcdc6"),
+                            NameAr = "فايد",
+                            NameEn = "Fayed"
+                        },
+                        new
+                        {
+                            Id = new Guid("adc4c596-f89a-403e-9b13-ca3c5fe0814f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2287),
+                            GovernorateId = new Guid("7297db33-8ab2-4421-ad3d-d8cf812fcdc6"),
+                            NameAr = "القنطرة شرق",
+                            NameEn = "Qantara East"
+                        },
+                        new
+                        {
+                            Id = new Guid("08632164-9853-44d0-bc7e-30adb1fea5b0"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2290),
+                            GovernorateId = new Guid("7297db33-8ab2-4421-ad3d-d8cf812fcdc6"),
+                            NameAr = "القنطرة غرب",
+                            NameEn = "Qantara West"
+                        },
+                        new
+                        {
+                            Id = new Guid("35319b0f-4864-4eec-8da6-1c6007e1874d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2293),
+                            GovernorateId = new Guid("7297db33-8ab2-4421-ad3d-d8cf812fcdc6"),
+                            NameAr = "التل الكبير",
+                            NameEn = "El Tal El Kabir"
+                        },
+                        new
+                        {
+                            Id = new Guid("141fc16d-253a-4186-ab22-a42de621d6de"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2295),
+                            GovernorateId = new Guid("7297db33-8ab2-4421-ad3d-d8cf812fcdc6"),
+                            NameAr = "أبو صوير",
+                            NameEn = "Abu Suwir"
+                        },
+                        new
+                        {
+                            Id = new Guid("98e83058-3ff5-4ab4-9671-729ee3c0bd17"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2297),
+                            GovernorateId = new Guid("7297db33-8ab2-4421-ad3d-d8cf812fcdc6"),
+                            NameAr = "القصاصين",
+                            NameEn = "Qassasin"
+                        },
+                        new
+                        {
+                            Id = new Guid("224ad81e-f913-43d4-a53b-0cbdc2fd451a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2299),
+                            GovernorateId = new Guid("99417f37-3ae7-40e1-8eaa-85d9829b53c6"),
+                            NameAr = "شبين الكوم",
+                            NameEn = "Shibin El Kom"
+                        },
+                        new
+                        {
+                            Id = new Guid("cf5b0297-0205-4e05-ba7b-102b4f1dd8fc"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2303),
+                            GovernorateId = new Guid("99417f37-3ae7-40e1-8eaa-85d9829b53c6"),
+                            NameAr = "منوف",
+                            NameEn = "Menouf"
+                        },
+                        new
+                        {
+                            Id = new Guid("17e5db19-b170-4dff-8640-d4562f462b44"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2305),
+                            GovernorateId = new Guid("99417f37-3ae7-40e1-8eaa-85d9829b53c6"),
+                            NameAr = "سرس الليان",
+                            NameEn = "Sers El Layan"
+                        },
+                        new
+                        {
+                            Id = new Guid("177aa85e-935e-4d87-a48e-a0dee1594bbd"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2307),
+                            GovernorateId = new Guid("99417f37-3ae7-40e1-8eaa-85d9829b53c6"),
+                            NameAr = "أشمون",
+                            NameEn = "Ashmun"
+                        },
+                        new
+                        {
+                            Id = new Guid("5bb4cc6d-a2c4-44f0-98c3-dd5de21199d4"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2309),
+                            GovernorateId = new Guid("99417f37-3ae7-40e1-8eaa-85d9829b53c6"),
+                            NameAr = "الباجور",
+                            NameEn = "El Bagour"
+                        },
+                        new
+                        {
+                            Id = new Guid("dd8dd3cf-b705-4493-8dd4-c3540d07b601"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2313),
+                            GovernorateId = new Guid("99417f37-3ae7-40e1-8eaa-85d9829b53c6"),
+                            NameAr = "قويسنا",
+                            NameEn = "Quesna"
+                        },
+                        new
+                        {
+                            Id = new Guid("643cd4cf-721b-4a94-b65e-2123be64a2f2"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2315),
+                            GovernorateId = new Guid("99417f37-3ae7-40e1-8eaa-85d9829b53c6"),
+                            NameAr = "بركة السبع",
+                            NameEn = "Berkat El Saba"
+                        },
+                        new
+                        {
+                            Id = new Guid("625c1d40-31a9-4cf0-b50c-03a6ea41589e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2317),
+                            GovernorateId = new Guid("99417f37-3ae7-40e1-8eaa-85d9829b53c6"),
+                            NameAr = "تلا",
+                            NameEn = "Tala"
+                        },
+                        new
+                        {
+                            Id = new Guid("ba8a9d1e-8f04-4936-9d7c-5752587f0af2"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2319),
+                            GovernorateId = new Guid("99417f37-3ae7-40e1-8eaa-85d9829b53c6"),
+                            NameAr = "الشهداء",
+                            NameEn = "El Shohada"
+                        },
+                        new
+                        {
+                            Id = new Guid("40d1b554-1b52-4d30-8647-a7ca2af0babe"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2323),
+                            GovernorateId = new Guid("0dfe319d-de1a-4650-9365-0862933cbd66"),
+                            NameAr = "المنيا",
+                            NameEn = "Minya"
+                        },
+                        new
+                        {
+                            Id = new Guid("d08a27b4-783d-467c-9833-b248ab970f29"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2325),
+                            GovernorateId = new Guid("0dfe319d-de1a-4650-9365-0862933cbd66"),
+                            NameAr = "المنيا الجديدة",
+                            NameEn = "New Minya"
+                        },
+                        new
+                        {
+                            Id = new Guid("2e126a97-ccca-4ce1-9561-31906873fd47"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2327),
+                            GovernorateId = new Guid("0dfe319d-de1a-4650-9365-0862933cbd66"),
+                            NameAr = "العدوة",
+                            NameEn = "El Adwa"
+                        },
+                        new
+                        {
+                            Id = new Guid("3e25acd3-8bbb-4463-b54d-7e5afdc8663f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2329),
+                            GovernorateId = new Guid("0dfe319d-de1a-4650-9365-0862933cbd66"),
+                            NameAr = "مغاغة",
+                            NameEn = "Maghagha"
+                        },
+                        new
+                        {
+                            Id = new Guid("e1cc20db-64cd-49ec-84ce-d1bc31f796a9"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2333),
+                            GovernorateId = new Guid("0dfe319d-de1a-4650-9365-0862933cbd66"),
+                            NameAr = "بني مزار",
+                            NameEn = "Bani Mazar"
+                        },
+                        new
+                        {
+                            Id = new Guid("53e565cf-5cc1-4e6f-a76b-cba531b1d09c"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2335),
+                            GovernorateId = new Guid("0dfe319d-de1a-4650-9365-0862933cbd66"),
+                            NameAr = "مطاي",
+                            NameEn = "Matai"
+                        },
+                        new
+                        {
+                            Id = new Guid("5eacdd6e-bf17-44bb-8261-20376c5e0aa1"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2337),
+                            GovernorateId = new Guid("0dfe319d-de1a-4650-9365-0862933cbd66"),
+                            NameAr = "سمالوط",
+                            NameEn = "Samalut"
+                        },
+                        new
+                        {
+                            Id = new Guid("e66d512e-5655-40eb-b61d-e1ae8aaeaff6"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2339),
+                            GovernorateId = new Guid("0dfe319d-de1a-4650-9365-0862933cbd66"),
+                            NameAr = "ملوي",
+                            NameEn = "Mallawi"
+                        },
+                        new
+                        {
+                            Id = new Guid("ff0f87b3-3a9e-46d7-aa91-bd4bb8e3efd9"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2348),
+                            GovernorateId = new Guid("0dfe319d-de1a-4650-9365-0862933cbd66"),
+                            NameAr = "أبو قرقاص",
+                            NameEn = "Abu Qurqas"
+                        },
+                        new
+                        {
+                            Id = new Guid("9670af39-88f5-44ed-928b-a4fd6518a884"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2350),
+                            GovernorateId = new Guid("5af068b3-1eb7-40c1-b1a2-23184af3eac8"),
+                            NameAr = "بنها",
+                            NameEn = "Benha"
+                        },
+                        new
+                        {
+                            Id = new Guid("176068a4-fd34-41db-942e-d9053d30769b"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2352),
+                            GovernorateId = new Guid("5af068b3-1eb7-40c1-b1a2-23184af3eac8"),
+                            NameAr = "قليوب",
+                            NameEn = "Qalyub"
+                        },
+                        new
+                        {
+                            Id = new Guid("e00b5ae6-9ff9-44dc-ab17-6b121c90e8de"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2354),
+                            GovernorateId = new Guid("5af068b3-1eb7-40c1-b1a2-23184af3eac8"),
+                            NameAr = "شبرا الخيمة",
+                            NameEn = "Shubra El Kheima"
+                        },
+                        new
+                        {
+                            Id = new Guid("3b962597-34ba-4d85-86c1-1487bcb3a3d4"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2358),
+                            GovernorateId = new Guid("5af068b3-1eb7-40c1-b1a2-23184af3eac8"),
+                            NameAr = "الخانكة",
+                            NameEn = "El Khanka"
+                        },
+                        new
+                        {
+                            Id = new Guid("29794457-2401-407c-862c-11b5a91e7636"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2361),
+                            GovernorateId = new Guid("5af068b3-1eb7-40c1-b1a2-23184af3eac8"),
+                            NameAr = "كفر شكر",
+                            NameEn = "Kafr Shukr"
+                        },
+                        new
+                        {
+                            Id = new Guid("5b96d366-6e6a-429f-8236-a5376671056e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2363),
+                            GovernorateId = new Guid("5af068b3-1eb7-40c1-b1a2-23184af3eac8"),
+                            NameAr = "طوخ",
+                            NameEn = "Toukh"
+                        },
+                        new
+                        {
+                            Id = new Guid("ba23daff-b7a7-4357-ad2f-f8898f88aab4"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2365),
+                            GovernorateId = new Guid("5af068b3-1eb7-40c1-b1a2-23184af3eac8"),
+                            NameAr = "القناطر الخيرية",
+                            NameEn = "Qanater El Khayreya"
+                        },
+                        new
+                        {
+                            Id = new Guid("75709e57-9771-4973-9695-43183ae78e59"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2369),
+                            GovernorateId = new Guid("5af068b3-1eb7-40c1-b1a2-23184af3eac8"),
+                            NameAr = "العبور",
+                            NameEn = "El Obour"
+                        },
+                        new
+                        {
+                            Id = new Guid("8777c363-b102-4462-8960-2d6fdd6ec277"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2371),
+                            GovernorateId = new Guid("aa0c69cb-0203-4218-9133-673bf9c2d280"),
+                            NameAr = "السويس",
+                            NameEn = "Suez"
+                        },
+                        new
+                        {
+                            Id = new Guid("4b164f16-7001-42a2-8692-10f5b3beba55"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2373),
+                            GovernorateId = new Guid("aa0c69cb-0203-4218-9133-673bf9c2d280"),
+                            NameAr = "الأربعين",
+                            NameEn = "El Arba'in"
+                        },
+                        new
+                        {
+                            Id = new Guid("bd5d051b-f2e6-4062-8c1b-c0f82a00d9ec"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2375),
+                            GovernorateId = new Guid("aa0c69cb-0203-4218-9133-673bf9c2d280"),
+                            NameAr = "فايد",
+                            NameEn = "Fayed"
+                        },
+                        new
+                        {
+                            Id = new Guid("db7c6a49-db07-46a4-bff6-8c736265376b"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2378),
+                            GovernorateId = new Guid("aa0c69cb-0203-4218-9133-673bf9c2d280"),
+                            NameAr = "الجناين",
+                            NameEn = "El Ganayen"
+                        },
+                        new
+                        {
+                            Id = new Guid("7c9dd957-7e57-4b0a-9f69-1acf8e7ec120"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2381),
+                            GovernorateId = new Guid("aa0c69cb-0203-4218-9133-673bf9c2d280"),
+                            NameAr = "عتاقة",
+                            NameEn = "Ataka"
+                        },
+                        new
+                        {
+                            Id = new Guid("9eb46d44-9586-477e-95bc-d5eff5bf5e42"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2383),
+                            GovernorateId = new Guid("6db77d7f-6d51-4bd4-9d99-344fc7c7c94e"),
+                            NameAr = "أسوان",
+                            NameEn = "Aswan"
+                        },
+                        new
+                        {
+                            Id = new Guid("af97304b-dcb9-4dd9-90e1-12e735a95b91"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2385),
+                            GovernorateId = new Guid("6db77d7f-6d51-4bd4-9d99-344fc7c7c94e"),
+                            NameAr = "كوم أمبو",
+                            NameEn = "Kom Ombo"
+                        },
+                        new
+                        {
+                            Id = new Guid("a52639b7-5249-4a05-b6e0-7db2ae657540"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2388),
+                            GovernorateId = new Guid("6db77d7f-6d51-4bd4-9d99-344fc7c7c94e"),
+                            NameAr = "دراو",
+                            NameEn = "Daraw"
+                        },
+                        new
+                        {
+                            Id = new Guid("fbaab47f-bbd5-4dfd-8f17-93e742b84156"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2391),
+                            GovernorateId = new Guid("6db77d7f-6d51-4bd4-9d99-344fc7c7c94e"),
+                            NameAr = "إدفو",
+                            NameEn = "Edfu"
+                        },
+                        new
+                        {
+                            Id = new Guid("cef309c7-31cb-4716-af84-45c2409701e9"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2393),
+                            GovernorateId = new Guid("6db77d7f-6d51-4bd4-9d99-344fc7c7c94e"),
+                            NameAr = "نصر النوبة",
+                            NameEn = "Nasr El Nuba"
+                        },
+                        new
+                        {
+                            Id = new Guid("e5ba3fd7-bd13-4f1d-9b1a-5faf09149b7a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2395),
+                            GovernorateId = new Guid("6db77d7f-6d51-4bd4-9d99-344fc7c7c94e"),
+                            NameAr = "كلابشة",
+                            NameEn = "Kalabsha"
+                        },
+                        new
+                        {
+                            Id = new Guid("7a78e60c-db7b-47b4-960e-ba0fc023296f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2398),
+                            GovernorateId = new Guid("83772c42-7f34-4d08-b482-0282b33dee12"),
+                            NameAr = "أسيوط",
+                            NameEn = "Assiut"
+                        },
+                        new
+                        {
+                            Id = new Guid("402838eb-2fd5-4822-8878-e3d09f05e18e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2400),
+                            GovernorateId = new Guid("83772c42-7f34-4d08-b482-0282b33dee12"),
+                            NameAr = "أسيوط الجديدة",
+                            NameEn = "New Assiut"
+                        },
+                        new
+                        {
+                            Id = new Guid("7181e13e-4a88-42ee-882f-d56f2f50c452"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2404),
+                            GovernorateId = new Guid("83772c42-7f34-4d08-b482-0282b33dee12"),
+                            NameAr = "ديروط",
+                            NameEn = "Deirout"
+                        },
+                        new
+                        {
+                            Id = new Guid("59ba53af-3a1a-4ef0-a535-aa6dedc5e862"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2406),
+                            GovernorateId = new Guid("83772c42-7f34-4d08-b482-0282b33dee12"),
+                            NameAr = "منفلوط",
+                            NameEn = "Manfalut"
+                        },
+                        new
+                        {
+                            Id = new Guid("4d6a3bdf-db70-4f54-afa0-eb78339f7073"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2409),
+                            GovernorateId = new Guid("83772c42-7f34-4d08-b482-0282b33dee12"),
+                            NameAr = "القوصية",
+                            NameEn = "El Qusiya"
+                        },
+                        new
+                        {
+                            Id = new Guid("49c85f77-20b2-454c-8204-1e34c589407f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2411),
+                            GovernorateId = new Guid("83772c42-7f34-4d08-b482-0282b33dee12"),
+                            NameAr = "أبو تيج",
+                            NameEn = "Abu Tig"
+                        },
+                        new
+                        {
+                            Id = new Guid("bb6db997-ce5d-41b9-b339-8a55eea64728"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2413),
+                            GovernorateId = new Guid("83772c42-7f34-4d08-b482-0282b33dee12"),
+                            NameAr = "الغنايم",
+                            NameEn = "El Ghanaim"
+                        },
+                        new
+                        {
+                            Id = new Guid("01cce9df-3896-431b-968d-9c3f2672f167"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2415),
+                            GovernorateId = new Guid("83772c42-7f34-4d08-b482-0282b33dee12"),
+                            NameAr = "ساحل سليم",
+                            NameEn = "Sahil Selim"
+                        },
+                        new
+                        {
+                            Id = new Guid("c7bfc385-7e14-488e-a7eb-3ca221830fd3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2419),
+                            GovernorateId = new Guid("83772c42-7f34-4d08-b482-0282b33dee12"),
+                            NameAr = "البداري",
+                            NameEn = "El Badari"
+                        },
+                        new
+                        {
+                            Id = new Guid("6dc70805-4506-4d35-aee0-e1b23f2cc134"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2421),
+                            GovernorateId = new Guid("83772c42-7f34-4d08-b482-0282b33dee12"),
+                            NameAr = "صدفا",
+                            NameEn = "Sidfa"
+                        },
+                        new
+                        {
+                            Id = new Guid("c75399a0-301e-484e-8630-737ed5830ca3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2423),
+                            GovernorateId = new Guid("b913b530-d32e-465f-b18e-74bdfd3808e3"),
+                            NameAr = "بني سويف",
+                            NameEn = "Beni Suef"
+                        },
+                        new
+                        {
+                            Id = new Guid("c07978aa-44db-4491-9d63-b08a88c824c2"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2425),
+                            GovernorateId = new Guid("b913b530-d32e-465f-b18e-74bdfd3808e3"),
+                            NameAr = "بني سويف الجديدة",
+                            NameEn = "New Beni Suef"
+                        },
+                        new
+                        {
+                            Id = new Guid("2f48b0a3-a76e-4dc6-8bb5-192783b378f0"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2429),
+                            GovernorateId = new Guid("b913b530-d32e-465f-b18e-74bdfd3808e3"),
+                            NameAr = "الواسطى",
+                            NameEn = "El Wasta"
+                        },
+                        new
+                        {
+                            Id = new Guid("bb903f77-0a9a-4474-b453-8c99fab2adee"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2431),
+                            GovernorateId = new Guid("b913b530-d32e-465f-b18e-74bdfd3808e3"),
+                            NameAr = "ناصر",
+                            NameEn = "Naser"
+                        },
+                        new
+                        {
+                            Id = new Guid("bcbd6eaf-eaa2-4337-85be-d4731d1e86ac"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2433),
+                            GovernorateId = new Guid("b913b530-d32e-465f-b18e-74bdfd3808e3"),
+                            NameAr = "إهناسيا",
+                            NameEn = "Ehnasia"
+                        },
+                        new
+                        {
+                            Id = new Guid("0611fa88-fbdf-4230-9a05-e77837d470cb"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2435),
+                            GovernorateId = new Guid("b913b530-d32e-465f-b18e-74bdfd3808e3"),
+                            NameAr = "ببا",
+                            NameEn = "Biba"
+                        },
+                        new
+                        {
+                            Id = new Guid("4cfb2912-dbea-4d47-b5bd-c4fca9d0f289"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2439),
+                            GovernorateId = new Guid("b913b530-d32e-465f-b18e-74bdfd3808e3"),
+                            NameAr = "الفشن",
+                            NameEn = "El Fashn"
+                        },
+                        new
+                        {
+                            Id = new Guid("6cc3177b-f7fa-4637-988b-9639a951bbf4"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2441),
+                            GovernorateId = new Guid("b913b530-d32e-465f-b18e-74bdfd3808e3"),
+                            NameAr = "سمسطا",
+                            NameEn = "Somasta"
+                        },
+                        new
+                        {
+                            Id = new Guid("c0047ddc-e120-4ca7-ab63-1d1976bd4e5a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2443),
+                            GovernorateId = new Guid("e32362b4-750b-4dc8-8a7f-1a0a2f228ff4"),
+                            NameAr = "بورسعيد",
+                            NameEn = "Port Said"
+                        },
+                        new
+                        {
+                            Id = new Guid("b04db5bd-7385-43e2-b5ed-cba146845802"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2446),
+                            GovernorateId = new Guid("e32362b4-750b-4dc8-8a7f-1a0a2f228ff4"),
+                            NameAr = "بورفؤاد",
+                            NameEn = "Port Fuad"
+                        },
+                        new
+                        {
+                            Id = new Guid("7389a8de-d40d-4fe3-a95f-07663f31e543"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2449),
+                            GovernorateId = new Guid("e32362b4-750b-4dc8-8a7f-1a0a2f228ff4"),
+                            NameAr = "الضاحية",
+                            NameEn = "El Dahiya"
+                        },
+                        new
+                        {
+                            Id = new Guid("64b85ad0-8df9-48a1-952d-7ce52483f285"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2451),
+                            GovernorateId = new Guid("e32362b4-750b-4dc8-8a7f-1a0a2f228ff4"),
+                            NameAr = "المناخ",
+                            NameEn = "El Manakh"
+                        },
+                        new
+                        {
+                            Id = new Guid("de75b480-002c-4553-b310-d3f38c7b628c"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2453),
+                            GovernorateId = new Guid("e32362b4-750b-4dc8-8a7f-1a0a2f228ff4"),
+                            NameAr = "الزهور",
+                            NameEn = "El Zohour"
+                        },
+                        new
+                        {
+                            Id = new Guid("62c8807f-2cc8-437f-bf0a-57dc3f2eb58d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2456),
+                            GovernorateId = new Guid("e32362b4-750b-4dc8-8a7f-1a0a2f228ff4"),
+                            NameAr = "الشرقية",
+                            NameEn = "El Sharqiya"
+                        },
+                        new
+                        {
+                            Id = new Guid("d7939ca2-34bd-4213-8fce-60593ee19f24"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2459),
+                            GovernorateId = new Guid("e32362b4-750b-4dc8-8a7f-1a0a2f228ff4"),
+                            NameAr = "الغربية",
+                            NameEn = "El Gharbiya"
+                        },
+                        new
+                        {
+                            Id = new Guid("d7a6e136-330b-435f-a952-364979b2592e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2461),
+                            GovernorateId = new Guid("8dd79782-b1f3-44d1-926d-b2e4b3f8b204"),
+                            NameAr = "دمياط",
+                            NameEn = "Damietta"
+                        },
+                        new
+                        {
+                            Id = new Guid("d4502461-80b7-4df6-b974-44e7d859f5ea"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2464),
+                            GovernorateId = new Guid("8dd79782-b1f3-44d1-926d-b2e4b3f8b204"),
+                            NameAr = "دمياط الجديدة",
+                            NameEn = "New Damietta"
+                        },
+                        new
+                        {
+                            Id = new Guid("fe7fe83d-6c4d-4b8b-abd3-9a39c35d97c1"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2466),
+                            GovernorateId = new Guid("8dd79782-b1f3-44d1-926d-b2e4b3f8b204"),
+                            NameAr = "الروضة",
+                            NameEn = "El Rawda"
+                        },
+                        new
+                        {
+                            Id = new Guid("ddd9e3fa-8c74-4ede-ad99-1148d978e9a6"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2469),
+                            GovernorateId = new Guid("8dd79782-b1f3-44d1-926d-b2e4b3f8b204"),
+                            NameAr = "كفر سعد",
+                            NameEn = "Kafr Saad"
+                        },
+                        new
+                        {
+                            Id = new Guid("a87f5cb8-7f62-46df-ab8a-07a174f8a5ea"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2471),
+                            GovernorateId = new Guid("8dd79782-b1f3-44d1-926d-b2e4b3f8b204"),
+                            NameAr = "زرقون",
+                            NameEn = "Zarqoun"
+                        },
+                        new
+                        {
+                            Id = new Guid("1dce380d-3b0c-4419-8653-85e6b638cc75"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2473),
+                            GovernorateId = new Guid("8dd79782-b1f3-44d1-926d-b2e4b3f8b204"),
+                            NameAr = "السرو",
+                            NameEn = "El Sarou"
+                        },
+                        new
+                        {
+                            Id = new Guid("bd0689a6-ab84-4490-bc38-a6eeef7e43a7"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2475),
+                            GovernorateId = new Guid("8dd79782-b1f3-44d1-926d-b2e4b3f8b204"),
+                            NameAr = "الرحمانية",
+                            NameEn = "El Rahmaniya"
+                        },
+                        new
+                        {
+                            Id = new Guid("bcadb211-272b-446d-8266-6ea33a17511e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2479),
+                            GovernorateId = new Guid("8dd79782-b1f3-44d1-926d-b2e4b3f8b204"),
+                            NameAr = "فارسكور",
+                            NameEn = "Fareskour"
+                        },
+                        new
+                        {
+                            Id = new Guid("7e2d8935-05c5-4015-95fb-091388320e51"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2481),
+                            GovernorateId = new Guid("8dd79782-b1f3-44d1-926d-b2e4b3f8b204"),
+                            NameAr = "الزرقا",
+                            NameEn = "El Zarqa"
+                        },
+                        new
+                        {
+                            Id = new Guid("c19c9c92-a58e-4415-9571-82677b70b422"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2483),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "الزقازيق",
+                            NameEn = "Zagazig"
+                        },
+                        new
+                        {
+                            Id = new Guid("c57730e7-4443-4d16-8512-836d863e39d5"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2485),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "الزقازيق الجديدة",
+                            NameEn = "New Zagazig"
+                        },
+                        new
+                        {
+                            Id = new Guid("9ffd9606-f060-42cd-8596-127f005fc470"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2490),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "العاشر من رمضان",
+                            NameEn = "10th of Ramadan"
+                        },
+                        new
+                        {
+                            Id = new Guid("68ecefb2-86c6-4f78-9659-404fff1d25a4"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2492),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "بلبيس",
+                            NameEn = "Belbeis"
+                        },
+                        new
+                        {
+                            Id = new Guid("70745be4-c91a-416a-8d7a-49e81dd4ed79"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2494),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "أبو كبير",
+                            NameEn = "Abu Kabir"
+                        },
+                        new
+                        {
+                            Id = new Guid("28d66c0e-8cbc-4e0b-a17b-01a0bb0e8616"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2496),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "فاقوس",
+                            NameEn = "Faqous"
+                        },
+                        new
+                        {
+                            Id = new Guid("1b6cfc19-8b18-4375-919e-f4d3efa31fc9"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2499),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "الإبراهيمية",
+                            NameEn = "El Ibrahimiya"
+                        },
+                        new
+                        {
+                            Id = new Guid("3e149521-4d83-4bbc-b2e0-fc5c832af541"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2501),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "ديرب نجم",
+                            NameEn = "Deirb Negm"
+                        },
+                        new
+                        {
+                            Id = new Guid("1e90e81d-3efa-41c2-b1d6-9e7829d0a15d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2503),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "كفر صقر",
+                            NameEn = "Kafr Saqr"
+                        },
+                        new
+                        {
+                            Id = new Guid("e517db53-9b67-409b-9065-81dc336acb25"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2505),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "أولاد صقر",
+                            NameEn = "Awlad Saqr"
+                        },
+                        new
+                        {
+                            Id = new Guid("059c3525-d6d6-4c18-959e-7ef211f92e6c"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2509),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "ههيا",
+                            NameEn = "Hihya"
+                        },
+                        new
+                        {
+                            Id = new Guid("93dcaf56-fccc-47b8-be45-42f74c98b70f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2511),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "أبو حماد",
+                            NameEn = "Abu Hammad"
+                        },
+                        new
+                        {
+                            Id = new Guid("24b16beb-597e-4b75-a6f2-63f37034f0e1"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2513),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "القرين",
+                            NameEn = "El Qurein"
+                        },
+                        new
+                        {
+                            Id = new Guid("de187251-2e18-4a0b-908c-1111bb705544"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2515),
+                            GovernorateId = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            NameAr = "هيئة قناة السويس",
+                            NameEn = "Suez Canal Authority"
+                        },
+                        new
+                        {
+                            Id = new Guid("bae2db06-93f8-41c2-903a-961b4e3b0309"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2519),
+                            GovernorateId = new Guid("d7204dc1-b79c-42dd-8b68-574a86651b68"),
+                            NameAr = "الطور",
+                            NameEn = "El Tor"
+                        },
+                        new
+                        {
+                            Id = new Guid("fdcf42c0-ea2a-499f-9c0d-7db48a5a342c"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2526),
+                            GovernorateId = new Guid("d7204dc1-b79c-42dd-8b68-574a86651b68"),
+                            NameAr = "شرم الشيخ",
+                            NameEn = "Sharm El Sheikh"
+                        },
+                        new
+                        {
+                            Id = new Guid("315811b6-f0ad-4a9b-8508-286016808713"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2528),
+                            GovernorateId = new Guid("d7204dc1-b79c-42dd-8b68-574a86651b68"),
+                            NameAr = "دهب",
+                            NameEn = "Dahab"
+                        },
+                        new
+                        {
+                            Id = new Guid("b01dcd5e-3cf1-498a-bd6d-a1a35fb49c36"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2530),
+                            GovernorateId = new Guid("d7204dc1-b79c-42dd-8b68-574a86651b68"),
+                            NameAr = "نويبع",
+                            NameEn = "Nuweiba"
+                        },
+                        new
+                        {
+                            Id = new Guid("32318b08-a182-4177-93ff-4077eba1b6e6"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2535),
+                            GovernorateId = new Guid("d7204dc1-b79c-42dd-8b68-574a86651b68"),
+                            NameAr = "طابا",
+                            NameEn = "Taba"
+                        },
+                        new
+                        {
+                            Id = new Guid("463a0034-f33b-43db-8c96-9daf59288400"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2537),
+                            GovernorateId = new Guid("d7204dc1-b79c-42dd-8b68-574a86651b68"),
+                            NameAr = "سانت كاترين",
+                            NameEn = "Saint Catherine"
+                        },
+                        new
+                        {
+                            Id = new Guid("4a40ca1c-449d-47ee-9788-19e420bdecbb"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2539),
+                            GovernorateId = new Guid("d7204dc1-b79c-42dd-8b68-574a86651b68"),
+                            NameAr = "أبو رديس",
+                            NameEn = "Abu Redis"
+                        },
+                        new
+                        {
+                            Id = new Guid("83382d67-eb96-41ec-97c6-45867b8629fb"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2541),
+                            GovernorateId = new Guid("d7204dc1-b79c-42dd-8b68-574a86651b68"),
+                            NameAr = "أبو زنيمة",
+                            NameEn = "Abu Zenima"
+                        },
+                        new
+                        {
+                            Id = new Guid("f7f7bcef-3e37-4d80-8afa-b607a8392822"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2544),
+                            GovernorateId = new Guid("6c53e322-e081-4df7-acc7-952aaa07c327"),
+                            NameAr = "كفر الشيخ",
+                            NameEn = "Kafr El Sheikh"
+                        },
+                        new
+                        {
+                            Id = new Guid("5ef44518-90dd-44cd-b523-1363c53991af"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2546),
+                            GovernorateId = new Guid("6c53e322-e081-4df7-acc7-952aaa07c327"),
+                            NameAr = "كفر الشيخ الجديدة",
+                            NameEn = "New Kafr El Sheikh"
+                        },
+                        new
+                        {
+                            Id = new Guid("4be8f3ab-573e-4eaa-8f27-20712c2753e7"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2548),
+                            GovernorateId = new Guid("6c53e322-e081-4df7-acc7-952aaa07c327"),
+                            NameAr = "دسوق",
+                            NameEn = "Desouk"
+                        },
+                        new
+                        {
+                            Id = new Guid("bb9f7a54-9aeb-4754-a179-fc7db4f05db5"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2550),
+                            GovernorateId = new Guid("6c53e322-e081-4df7-acc7-952aaa07c327"),
+                            NameAr = "فوه",
+                            NameEn = "Fuwa"
+                        },
+                        new
+                        {
+                            Id = new Guid("f79d6d3b-a9dc-4943-a4c4-865066beeb22"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2554),
+                            GovernorateId = new Guid("6c53e322-e081-4df7-acc7-952aaa07c327"),
+                            NameAr = "مطوبس",
+                            NameEn = "Metoubes"
+                        },
+                        new
+                        {
+                            Id = new Guid("3ca395df-e1bb-4a20-9e8a-ffb165a1fef1"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2556),
+                            GovernorateId = new Guid("6c53e322-e081-4df7-acc7-952aaa07c327"),
+                            NameAr = "البرلس",
+                            NameEn = "El Borollos"
+                        },
+                        new
+                        {
+                            Id = new Guid("e45f0368-d5be-4bbd-809e-2fbbabbec312"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2558),
+                            GovernorateId = new Guid("6c53e322-e081-4df7-acc7-952aaa07c327"),
+                            NameAr = "الحامول",
+                            NameEn = "El Hamool"
+                        },
+                        new
+                        {
+                            Id = new Guid("985f94bc-14dd-430e-b2bb-72cfed04ca60"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2560),
+                            GovernorateId = new Guid("6c53e322-e081-4df7-acc7-952aaa07c327"),
+                            NameAr = "بيلا",
+                            NameEn = "Bella"
+                        },
+                        new
+                        {
+                            Id = new Guid("87ddda6c-341c-4f55-a59a-94cac1d55ce1"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2564),
+                            GovernorateId = new Guid("6c53e322-e081-4df7-acc7-952aaa07c327"),
+                            NameAr = "الرياض",
+                            NameEn = "El Riyad"
+                        },
+                        new
+                        {
+                            Id = new Guid("0b0e4ec3-99c6-4b3b-a0b0-2329a254f148"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2566),
+                            GovernorateId = new Guid("6c53e322-e081-4df7-acc7-952aaa07c327"),
+                            NameAr = "سيدي سالم",
+                            NameEn = "Sidi Salem"
+                        },
+                        new
+                        {
+                            Id = new Guid("d0b04045-1789-41bb-a362-e272b33f5c24"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2568),
+                            GovernorateId = new Guid("6c53e322-e081-4df7-acc7-952aaa07c327"),
+                            NameAr = "قلين",
+                            NameEn = "Qallin"
+                        },
+                        new
+                        {
+                            Id = new Guid("dcb7e8cb-7f47-4e6d-b92a-f61ef11fbc90"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2570),
+                            GovernorateId = new Guid("80ed16de-2582-4f03-81fe-98b89e75ec42"),
+                            NameAr = "مرسى مطروح",
+                            NameEn = "Marsa Matrouh"
+                        },
+                        new
+                        {
+                            Id = new Guid("c53255c8-2c04-4301-a758-5f927d6fc032"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2574),
+                            GovernorateId = new Guid("80ed16de-2582-4f03-81fe-98b89e75ec42"),
+                            NameAr = "الحمام",
+                            NameEn = "El Hamam"
+                        },
+                        new
+                        {
+                            Id = new Guid("5b4b24eb-8442-4f3d-80ee-64ae097cd7eb"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2577),
+                            GovernorateId = new Guid("80ed16de-2582-4f03-81fe-98b89e75ec42"),
+                            NameAr = "العلمين",
+                            NameEn = "El Alamein"
+                        },
+                        new
+                        {
+                            Id = new Guid("81964f97-4cc6-4ecc-8512-e4f8c2415534"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2579),
+                            GovernorateId = new Guid("80ed16de-2582-4f03-81fe-98b89e75ec42"),
+                            NameAr = "الضبعة",
+                            NameEn = "El Dabaa"
+                        },
+                        new
+                        {
+                            Id = new Guid("5908920a-e6c9-4e6c-aab8-aff3357fdecd"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2581),
+                            GovernorateId = new Guid("80ed16de-2582-4f03-81fe-98b89e75ec42"),
+                            NameAr = "النجيلة",
+                            NameEn = "El Negila"
+                        },
+                        new
+                        {
+                            Id = new Guid("47958097-133f-4bab-b786-ac8ff2957fa3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2585),
+                            GovernorateId = new Guid("80ed16de-2582-4f03-81fe-98b89e75ec42"),
+                            NameAr = "سيدي براني",
+                            NameEn = "Sidi Barrani"
+                        },
+                        new
+                        {
+                            Id = new Guid("82346f5e-7c64-4d1a-aeb4-5c9bca1128c2"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2587),
+                            GovernorateId = new Guid("80ed16de-2582-4f03-81fe-98b89e75ec42"),
+                            NameAr = "السلوم",
+                            NameEn = "El Salloum"
+                        },
+                        new
+                        {
+                            Id = new Guid("c0f5426b-f0d7-4b1b-a824-d51b7d336c76"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2589),
+                            GovernorateId = new Guid("80ed16de-2582-4f03-81fe-98b89e75ec42"),
+                            NameAr = "سيوة",
+                            NameEn = "Siwa"
+                        },
+                        new
+                        {
+                            Id = new Guid("7b5d300a-868b-44ab-9af0-6464b3c2ff62"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2591),
+                            GovernorateId = new Guid("c0ed12d9-3bad-40ec-a608-39a27bfe1aa8"),
+                            NameAr = "الأقصر",
+                            NameEn = "Luxor"
+                        },
+                        new
+                        {
+                            Id = new Guid("dbced288-3037-4710-83a4-233f38ef9446"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2595),
+                            GovernorateId = new Guid("c0ed12d9-3bad-40ec-a608-39a27bfe1aa8"),
+                            NameAr = "الأقصر الجديدة",
+                            NameEn = "New Luxor"
+                        },
+                        new
+                        {
+                            Id = new Guid("5586b640-06e0-425f-94eb-1215dcb36332"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2597),
+                            GovernorateId = new Guid("c0ed12d9-3bad-40ec-a608-39a27bfe1aa8"),
+                            NameAr = "القرنة",
+                            NameEn = "El Qurna"
+                        },
+                        new
+                        {
+                            Id = new Guid("bf3d0732-2359-454d-9f14-8a35c367df9c"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2599),
+                            GovernorateId = new Guid("c0ed12d9-3bad-40ec-a608-39a27bfe1aa8"),
+                            NameAr = "الزينية",
+                            NameEn = "El Ziniya"
+                        },
+                        new
+                        {
+                            Id = new Guid("8e42ca8f-8762-4276-a10d-6a3c3760a1f0"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2601),
+                            GovernorateId = new Guid("c0ed12d9-3bad-40ec-a608-39a27bfe1aa8"),
+                            NameAr = "بياضة",
+                            NameEn = "Bayada"
+                        },
+                        new
+                        {
+                            Id = new Guid("34e23384-c3d1-4bbe-9a69-6c6fbaaea35f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2605),
+                            GovernorateId = new Guid("c0ed12d9-3bad-40ec-a608-39a27bfe1aa8"),
+                            NameAr = "الطود",
+                            NameEn = "El Tod"
+                        },
+                        new
+                        {
+                            Id = new Guid("6d6911df-3284-400a-8416-b56bc08cb264"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2607),
+                            GovernorateId = new Guid("c0ed12d9-3bad-40ec-a608-39a27bfe1aa8"),
+                            NameAr = "إسنا",
+                            NameEn = "Esna"
+                        },
+                        new
+                        {
+                            Id = new Guid("6790c207-ec57-4306-abeb-649944f45728"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2609),
+                            GovernorateId = new Guid("c0ed12d9-3bad-40ec-a608-39a27bfe1aa8"),
+                            NameAr = "أرمنت",
+                            NameEn = "Armant"
+                        },
+                        new
+                        {
+                            Id = new Guid("512cf3e3-91f8-4c0c-b9ac-929b3321d2ab"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2611),
+                            GovernorateId = new Guid("c2e18ac3-3435-411b-9146-af0216927d57"),
+                            NameAr = "قنا",
+                            NameEn = "Qena"
+                        },
+                        new
+                        {
+                            Id = new Guid("84828aaa-8bdd-4292-b717-e7f2692d07e1"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2614),
+                            GovernorateId = new Guid("c2e18ac3-3435-411b-9146-af0216927d57"),
+                            NameAr = "قنا الجديدة",
+                            NameEn = "New Qena"
+                        },
+                        new
+                        {
+                            Id = new Guid("ada48c30-02ff-4e45-853d-7a0ff177fc91"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2617),
+                            GovernorateId = new Guid("c2e18ac3-3435-411b-9146-af0216927d57"),
+                            NameAr = "أبو تشت",
+                            NameEn = "Abu Tesht"
+                        },
+                        new
+                        {
+                            Id = new Guid("8f8e3278-4c53-471c-8f1c-a7ab6281f629"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2619),
+                            GovernorateId = new Guid("c2e18ac3-3435-411b-9146-af0216927d57"),
+                            NameAr = "نجع حمادي",
+                            NameEn = "Nag Hammadi"
+                        },
+                        new
+                        {
+                            Id = new Guid("365d43cd-4d5c-4b36-8e17-05ed7035eda7"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2621),
+                            GovernorateId = new Guid("c2e18ac3-3435-411b-9146-af0216927d57"),
+                            NameAr = "دشنا",
+                            NameEn = "Deshna"
+                        },
+                        new
+                        {
+                            Id = new Guid("cd188f10-67e5-468c-9c8e-d3ddf6c846f0"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2625),
+                            GovernorateId = new Guid("c2e18ac3-3435-411b-9146-af0216927d57"),
+                            NameAr = "الوقف",
+                            NameEn = "El Waqf"
+                        },
+                        new
+                        {
+                            Id = new Guid("058e9107-0f65-41e0-a05a-4bead32eefb9"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2627),
+                            GovernorateId = new Guid("c2e18ac3-3435-411b-9146-af0216927d57"),
+                            NameAr = "قفط",
+                            NameEn = "Qift"
+                        },
+                        new
+                        {
+                            Id = new Guid("b6d48ef9-ddf9-4736-9261-e150fb12b2e3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2629),
+                            GovernorateId = new Guid("c2e18ac3-3435-411b-9146-af0216927d57"),
+                            NameAr = "نقادة",
+                            NameEn = "Naqada"
+                        },
+                        new
+                        {
+                            Id = new Guid("3a720c03-5cfb-45a4-8d1f-822c3a34faa3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2631),
+                            GovernorateId = new Guid("c2e18ac3-3435-411b-9146-af0216927d57"),
+                            NameAr = "فرشوط",
+                            NameEn = "Farshout"
+                        },
+                        new
+                        {
+                            Id = new Guid("bcba9c1f-abfd-4b6e-87c8-b3e9cc7fdad0"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2635),
+                            GovernorateId = new Guid("c2e18ac3-3435-411b-9146-af0216927d57"),
+                            NameAr = "قوص",
+                            NameEn = "Qus"
+                        },
+                        new
+                        {
+                            Id = new Guid("0442f0ed-391e-48ae-8593-f1b0b982d427"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2637),
+                            GovernorateId = new Guid("fe37bf3d-7f1b-4bf3-83f0-de6e6121b575"),
+                            NameAr = "العريش",
+                            NameEn = "El Arish"
+                        },
+                        new
+                        {
+                            Id = new Guid("5253371b-e7c7-4ea9-862b-1e2dc5385bc5"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2639),
+                            GovernorateId = new Guid("fe37bf3d-7f1b-4bf3-83f0-de6e6121b575"),
+                            NameAr = "الشيخ زويد",
+                            NameEn = "Sheikh Zuweid"
+                        },
+                        new
+                        {
+                            Id = new Guid("08dc3d3c-07e9-4aae-88d5-b0af53bb1eef"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2641),
+                            GovernorateId = new Guid("fe37bf3d-7f1b-4bf3-83f0-de6e6121b575"),
+                            NameAr = "نخل",
+                            NameEn = "Nakhl"
+                        },
+                        new
+                        {
+                            Id = new Guid("8b3eeb80-5bee-4f9a-a434-9d45c6dbfdb6"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2645),
+                            GovernorateId = new Guid("fe37bf3d-7f1b-4bf3-83f0-de6e6121b575"),
+                            NameAr = "رفح",
+                            NameEn = "Rafah"
+                        },
+                        new
+                        {
+                            Id = new Guid("b390fd50-b34b-42d5-a5f4-768bda18191c"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2647),
+                            GovernorateId = new Guid("fe37bf3d-7f1b-4bf3-83f0-de6e6121b575"),
+                            NameAr = "بئر العبد",
+                            NameEn = "Bir El Abd"
+                        },
+                        new
+                        {
+                            Id = new Guid("9f9332bb-af2c-445f-8452-8557c74f9495"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2649),
+                            GovernorateId = new Guid("fe37bf3d-7f1b-4bf3-83f0-de6e6121b575"),
+                            NameAr = "الحسنة",
+                            NameEn = "El Hasana"
+                        },
+                        new
+                        {
+                            Id = new Guid("77b79c2a-d4e0-4f4b-a7bd-019ff8817fb3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2651),
+                            GovernorateId = new Guid("fe37bf3d-7f1b-4bf3-83f0-de6e6121b575"),
+                            NameAr = "الطور",
+                            NameEn = "El Tor"
+                        },
+                        new
+                        {
+                            Id = new Guid("d4847803-0f9a-4e7d-8a78-f7f64c80478d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2654),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "سوهاج",
+                            NameEn = "Sohag"
+                        },
+                        new
+                        {
+                            Id = new Guid("0437f087-1332-4110-a71b-19fd71807df2"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2656),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "سوهاج الجديدة",
+                            NameEn = "New Sohag"
+                        },
+                        new
+                        {
+                            Id = new Guid("048b1b20-9d85-4152-97b7-fb8048fbdb28"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2659),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "أخميم",
+                            NameEn = "Akhmeem"
+                        },
+                        new
+                        {
+                            Id = new Guid("7f0e4876-7132-4eb3-81a1-df60b51dc924"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2662),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "أخميم الجديدة",
+                            NameEn = "New Akhmeem"
+                        },
+                        new
+                        {
+                            Id = new Guid("0ea03a99-748a-4d04-a348-72833059796b"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2666),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "البلينا",
+                            NameEn = "El Balina"
+                        },
+                        new
+                        {
+                            Id = new Guid("35d9c604-c348-41f0-8b36-132b9fa89712"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2668),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "المراغة",
+                            NameEn = "El Maragha"
+                        },
+                        new
+                        {
+                            Id = new Guid("0cedb888-5170-4124-a927-28ad1918e48d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2670),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "المنشأة",
+                            NameEn = "El Mansha"
+                        },
+                        new
+                        {
+                            Id = new Guid("1d3d9951-ff3c-45cf-b0ba-ae83aa5afff6"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2672),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "جرجا",
+                            NameEn = "Gerga"
+                        },
+                        new
+                        {
+                            Id = new Guid("64fe7973-37eb-4f9b-990d-54111b5758d7"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2675),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "جهينة",
+                            NameEn = "Jahina"
+                        },
+                        new
+                        {
+                            Id = new Guid("7d9d5bab-22ab-4fe2-a2eb-7110b708289e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2678),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "ساقلتة",
+                            NameEn = "Saqilta"
+                        },
+                        new
+                        {
+                            Id = new Guid("2f43febe-1162-4717-a244-813362fe63b0"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2680),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "طما",
+                            NameEn = "Tama"
+                        },
+                        new
+                        {
+                            Id = new Guid("efd72258-24b5-470c-a753-774269db481b"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2682),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "طهطا",
+                            NameEn = "Tahta"
+                        },
+                        new
+                        {
+                            Id = new Guid("77e13721-b56f-4f05-8b1a-e35caf320535"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2685),
+                            GovernorateId = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            NameAr = "الكوثر",
+                            NameEn = "El Kawther"
+                        },
+                        new
+                        {
+                            Id = new Guid("35d7a4e3-3656-435a-95c7-3d70e0e74cd0"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2687),
+                            GovernorateId = new Guid("a561a81d-23ce-4ab7-9b90-50c225a49f3f"),
+                            NameAr = "الخارجة",
+                            NameEn = "El Kharga"
+                        },
+                        new
+                        {
+                            Id = new Guid("fa58a3c8-e05f-4c54-b067-db14ad8b03c3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2690),
+                            GovernorateId = new Guid("a561a81d-23ce-4ab7-9b90-50c225a49f3f"),
+                            NameAr = "الخارجة الجديدة",
+                            NameEn = "New El Kharga"
+                        },
+                        new
+                        {
+                            Id = new Guid("80c45e12-64ad-4dde-a50a-31d7723b7c01"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2692),
+                            GovernorateId = new Guid("a561a81d-23ce-4ab7-9b90-50c225a49f3f"),
+                            NameAr = "باريس",
+                            NameEn = "Paris"
+                        },
+                        new
+                        {
+                            Id = new Guid("e19dc520-d72d-42f9-93db-324d5672fa0b"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2695),
+                            GovernorateId = new Guid("a561a81d-23ce-4ab7-9b90-50c225a49f3f"),
+                            NameAr = "الفرافرة",
+                            NameEn = "El Farafra"
+                        },
+                        new
+                        {
+                            Id = new Guid("32ab4b37-d2c5-439e-af37-fdcb5cde3f8b"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2702),
+                            GovernorateId = new Guid("a561a81d-23ce-4ab7-9b90-50c225a49f3f"),
+                            NameAr = "بلاط",
+                            NameEn = "Balat"
+                        },
+                        new
+                        {
+                            Id = new Guid("c9f93cca-bb42-4b16-814f-f85093276aca"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2704),
+                            GovernorateId = new Guid("a561a81d-23ce-4ab7-9b90-50c225a49f3f"),
+                            NameAr = "الداخلة",
+                            NameEn = "El Dakhla"
+                        },
+                        new
+                        {
+                            Id = new Guid("1f91a0fb-082a-49c8-a21b-486366bf76d5"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2706),
+                            GovernorateId = new Guid("a561a81d-23ce-4ab7-9b90-50c225a49f3f"),
+                            NameAr = "موط",
+                            NameEn = "Mut"
+                        },
+                        new
+                        {
+                            Id = new Guid("0aee56dd-25ea-4e07-bea1-631a99c0b618"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(2711),
+                            GovernorateId = new Guid("a561a81d-23ce-4ab7-9b90-50c225a49f3f"),
+                            NameAr = "الواحات البحرية",
+                            NameEn = "El Wahat El Bahariya"
+                        });
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.ClinicSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("AllowOnlineBooking")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ClinicName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int?>("DefaultAppointmentDuration")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("LicenseNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("LogoPath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int?>("MaxAppointmentsPerDay")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<bool>("RequireAppointmentConfirmation")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Website")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<TimeSpan?>("WorkingHoursEnd")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan?>("WorkingHoursStart")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClinicSettings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("0b14e720-e448-48ba-a61d-f94131177130"),
+                            Address = "شارع التحرير، القاهرة، مصر",
+                            AllowOnlineBooking = true,
+                            ClinicName = "عيادة العائدة الطبية",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2641),
+                            DefaultAppointmentDuration = 30,
+                            Email = "info@al-eaida-clinic.com",
+                            LicenseNumber = "MED-2024-001",
+                            MaxAppointmentsPerDay = 50,
+                            Phone = "+20 2 1234 5678",
+                            RequireAppointmentConfirmation = true,
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2641),
+                            Website = "www.al-eaida-clinic.com",
+                            WorkingHoursEnd = new TimeSpan(0, 17, 0, 0, 0),
+                            WorkingHoursStart = new TimeSpan(0, 9, 0, 0, 0)
+                        });
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Doctor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<string>("Bio")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<TimeSpan?>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LicenseNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("MaxPatientsPerDay")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MedicalSchool")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("ProfileImage")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Specialization")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<TimeSpan?>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("YearsOfExperience")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("LicenseNumber")
+                        .IsUnique()
+                        .HasFilter("[LicenseNumber] IS NOT NULL");
+
+                    b.HasIndex("Phone")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Doctors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("966e0d95-ead9-482a-9b81-275da246ff59"),
+                            Bio = "طبيب قلب متخصص في جراحة القلب المفتوح والقسطرة القلبية",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2785),
+                            Email = "ahmed.mohamed@al-eaida.com",
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            FirstName = "أحمد",
+                            IsActive = true,
+                            LastName = "محمد",
+                            LicenseNumber = "MED-2024-001",
+                            MaxPatientsPerDay = 20,
+                            MedicalSchool = "جامعة القاهرة",
+                            Phone = "+20 100 111 1111",
+                            Specialization = "Cardiology",
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2785),
+                            UserId = "14b85371-c6a3-43cc-97ec-585c6e09e623",
+                            YearsOfExperience = 15
+                        },
+                        new
+                        {
+                            Id = new Guid("3d2f2a26-ea45-492d-b26f-b4260c58095b"),
+                            Bio = "طبيبة نساء وولادة متخصصة في الولادة الطبيعية والقيصرية",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2791),
+                            Email = "mariam.hassan@al-eaida.com",
+                            EndTime = new TimeSpan(0, 17, 0, 0, 0),
+                            FirstName = "مريم",
+                            IsActive = true,
+                            LastName = "حسن",
+                            LicenseNumber = "MED-2024-003",
+                            MaxPatientsPerDay = 15,
+                            MedicalSchool = "جامعة الإسكندرية",
+                            Phone = "+20 100 333 3333",
+                            Specialization = "Obstetrics and Gynecology",
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2791),
+                            UserId = "f757d17b-6565-47a5-8236-fa1435202704",
+                            YearsOfExperience = 18
+                        },
+                        new
+                        {
+                            Id = new Guid("637a58ff-08f8-454c-ad71-1169c73b02e0"),
+                            Bio = "طبيب عظام متخصص في جراحة المفاصل والكسور المعقدة",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2796),
+                            Email = "khaled.ahmed@al-eaida.com",
+                            EndTime = new TimeSpan(0, 18, 0, 0, 0),
+                            FirstName = "خالد",
+                            IsActive = true,
+                            LastName = "أحمد",
+                            LicenseNumber = "MED-2024-004",
+                            MaxPatientsPerDay = 18,
+                            MedicalSchool = "جامعة القاهرة",
+                            Phone = "+20 100 444 4444",
+                            Specialization = "Orthopedics",
+                            StartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2796),
+                            UserId = "fef8f13b-e461-411f-b288-e1a3b536f5e5",
+                            YearsOfExperience = 20
+                        },
+                        new
+                        {
+                            Id = new Guid("a6f18096-1773-4ff8-9117-91498f525908"),
+                            Bio = "طبيبة عيون متخصصة في جراحة الشبكية والليزر",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2802),
+                            Email = "nour.mohamed@al-eaida.com",
+                            EndTime = new TimeSpan(0, 16, 0, 0, 0),
+                            FirstName = "نورا",
+                            IsActive = true,
+                            LastName = "محمد",
+                            LicenseNumber = "MED-2024-005",
+                            MaxPatientsPerDay = 22,
+                            MedicalSchool = "جامعة الأزهر",
+                            Phone = "+20 100 555 5555",
+                            Specialization = "Ophthalmology",
+                            StartTime = new TimeSpan(0, 9, 0, 0, 0),
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2802),
+                            UserId = "875631f9-20c3-4306-ab43-a12de3e258e2",
+                            YearsOfExperience = 10
+                        });
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.DoctorSchedule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorSchedules");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.DoctorSpecialization", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SpecializationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("SpecializationId");
+
+                    b.ToTable("DoctorSpecializations");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.EmergencyContact", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Relationship")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmergencyContacts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("69df6b94-75f4-4215-b715-0f74660c2446"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2934),
+                            Email = "fatma.mohamed@email.com",
+                            Name = "فاطمة محمد",
+                            Phone = "+20 100 222 2222",
+                            Relationship = "زوجة"
+                        },
+                        new
+                        {
+                            Id = new Guid("c8946c42-c7ec-4d4f-8060-d4fb1420033c"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2936),
+                            Email = "khaled.ali@email.com",
+                            Name = "خالد علي",
+                            Phone = "+20 100 444 4444",
+                            Relationship = "أخ"
+                        },
+                        new
+                        {
+                            Id = new Guid("64d134ad-cf75-4c84-a5ce-bfe57fa9f9a0"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2939),
+                            Email = "nour.hassan@email.com",
+                            Name = "نورا حسن",
+                            Phone = "+20 100 666 6666",
+                            Relationship = "زوجة"
+                        },
+                        new
+                        {
+                            Id = new Guid("f7c9aa16-dd11-4420-b16a-3676390eb737"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2943),
+                            Email = "mohamed.ahmed@email.com",
+                            Name = "محمد أحمد",
+                            Phone = "+20 100 888 8888",
+                            Relationship = "أب"
+                        },
+                        new
+                        {
+                            Id = new Guid("fe71fd12-5280-49e9-ae9a-ce9542d3968b"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2946),
+                            Email = "amira.mohamed@email.com",
+                            Name = "أميرة محمد",
+                            Phone = "+20 100 000 0000",
+                            Relationship = "زوجة"
+                        });
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.FinancialReport", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("CancelledAppointments")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CompletedAppointments")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("ConsultationFees")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<decimal?>("MedicationSales")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("NetProfit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("OtherServices")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("ReportDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("TotalAppointments")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("TotalExpenses")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalRevenue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FinancialReports");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Governorate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameEn")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Governorates");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("74e9a16a-a28a-458d-abab-5bcdfddc8671"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1478),
+                            NameAr = "القاهرة",
+                            NameEn = "Cairo"
+                        },
+                        new
+                        {
+                            Id = new Guid("4b5b39cd-59e1-4df1-b1b3-a9e72b081490"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1515),
+                            NameAr = "الجيزة",
+                            NameEn = "Giza"
+                        },
+                        new
+                        {
+                            Id = new Guid("b86dda5c-c4fc-4563-8303-43e838c6d6db"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1517),
+                            NameAr = "الأسكندرية",
+                            NameEn = "Alexandria"
+                        },
+                        new
+                        {
+                            Id = new Guid("38ecf431-44e1-4a58-a05a-af8ac4c057d7"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1519),
+                            NameAr = "الدقهلية",
+                            NameEn = "Dakahlia"
+                        },
+                        new
+                        {
+                            Id = new Guid("6721681d-d5b6-4484-a92d-a5fc406dc2b8"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1520),
+                            NameAr = "البحر الأحمر",
+                            NameEn = "Red Sea"
+                        },
+                        new
+                        {
+                            Id = new Guid("1bb5a834-9bdf-4949-9d3d-edf13fab3725"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1525),
+                            NameAr = "البحيرة",
+                            NameEn = "Beheira"
+                        },
+                        new
+                        {
+                            Id = new Guid("02791f62-3e4f-4beb-bb9c-d36a2b5f5486"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1527),
+                            NameAr = "الفيوم",
+                            NameEn = "Fayoum"
+                        },
+                        new
+                        {
+                            Id = new Guid("9215b237-8948-4029-a74f-63c811e5c1ce"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1528),
+                            NameAr = "الغربية",
+                            NameEn = "Gharbiya"
+                        },
+                        new
+                        {
+                            Id = new Guid("7297db33-8ab2-4421-ad3d-d8cf812fcdc6"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1530),
+                            NameAr = "الإسماعلية",
+                            NameEn = "Ismailia"
+                        },
+                        new
+                        {
+                            Id = new Guid("99417f37-3ae7-40e1-8eaa-85d9829b53c6"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1531),
+                            NameAr = "المنوفية",
+                            NameEn = "Menofia"
+                        },
+                        new
+                        {
+                            Id = new Guid("0dfe319d-de1a-4650-9365-0862933cbd66"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1533),
+                            NameAr = "المنيا",
+                            NameEn = "Minya"
+                        },
+                        new
+                        {
+                            Id = new Guid("5af068b3-1eb7-40c1-b1a2-23184af3eac8"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1542),
+                            NameAr = "القليوبية",
+                            NameEn = "Qaliubiya"
+                        },
+                        new
+                        {
+                            Id = new Guid("a561a81d-23ce-4ab7-9b90-50c225a49f3f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1544),
+                            NameAr = "الوادي الجديد",
+                            NameEn = "New Valley"
+                        },
+                        new
+                        {
+                            Id = new Guid("aa0c69cb-0203-4218-9133-673bf9c2d280"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1547),
+                            NameAr = "السويس",
+                            NameEn = "Suez"
+                        },
+                        new
+                        {
+                            Id = new Guid("6db77d7f-6d51-4bd4-9d99-344fc7c7c94e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1549),
+                            NameAr = "اسوان",
+                            NameEn = "Aswan"
+                        },
+                        new
+                        {
+                            Id = new Guid("83772c42-7f34-4d08-b482-0282b33dee12"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1551),
+                            NameAr = "اسيوط",
+                            NameEn = "Assiut"
+                        },
+                        new
+                        {
+                            Id = new Guid("b913b530-d32e-465f-b18e-74bdfd3808e3"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1553),
+                            NameAr = "بني سويف",
+                            NameEn = "Beni Suef"
+                        },
+                        new
+                        {
+                            Id = new Guid("e32362b4-750b-4dc8-8a7f-1a0a2f228ff4"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1554),
+                            NameAr = "بورسعيد",
+                            NameEn = "Port Said"
+                        },
+                        new
+                        {
+                            Id = new Guid("8dd79782-b1f3-44d1-926d-b2e4b3f8b204"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1556),
+                            NameAr = "دمياط",
+                            NameEn = "Damietta"
+                        },
+                        new
+                        {
+                            Id = new Guid("9873a03e-a7c9-4fcf-a9a3-97875845cfe8"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1557),
+                            NameAr = "الشرقية",
+                            NameEn = "Sharkia"
+                        },
+                        new
+                        {
+                            Id = new Guid("d7204dc1-b79c-42dd-8b68-574a86651b68"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1558),
+                            NameAr = "جنوب سيناء",
+                            NameEn = "South Sinai"
+                        },
+                        new
+                        {
+                            Id = new Guid("6c53e322-e081-4df7-acc7-952aaa07c327"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1562),
+                            NameAr = "كفر الشيخ",
+                            NameEn = "Kafr Al sheikh"
+                        },
+                        new
+                        {
+                            Id = new Guid("80ed16de-2582-4f03-81fe-98b89e75ec42"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1564),
+                            NameAr = "مطروح",
+                            NameEn = "Matrouh"
+                        },
+                        new
+                        {
+                            Id = new Guid("c0ed12d9-3bad-40ec-a608-39a27bfe1aa8"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1565),
+                            NameAr = "الأقصر",
+                            NameEn = "Luxor"
+                        },
+                        new
+                        {
+                            Id = new Guid("c2e18ac3-3435-411b-9146-af0216927d57"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1567),
+                            NameAr = "قنا",
+                            NameEn = "Qena"
+                        },
+                        new
+                        {
+                            Id = new Guid("fe37bf3d-7f1b-4bf3-83f0-de6e6121b575"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1568),
+                            NameAr = "شمال سيناء",
+                            NameEn = "North Sinai"
+                        },
+                        new
+                        {
+                            Id = new Guid("1c6119ce-6fa5-464b-b8eb-4824d09aeef4"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 218, DateTimeKind.Utc).AddTicks(1570),
+                            NameAr = "سوهاج",
+                            NameEn = "Sohag"
+                        });
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.InsuranceInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("GroupNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PolicyNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("ValidUntil")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InsuranceInfos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("c09be4ec-daab-4776-bc67-3157319ec66a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(3017),
+                            GroupNumber = "GRP-001",
+                            PolicyNumber = "POL-001-2024",
+                            Provider = "شركة التأمين الصحي",
+                            ValidUntil = new DateTime(2026, 4, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(3014)
+                        },
+                        new
+                        {
+                            Id = new Guid("a95b298a-850c-4f70-984a-9f0172ec8281"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(3020),
+                            GroupNumber = "GRP-002",
+                            PolicyNumber = "POL-002-2024",
+                            Provider = "شركة التأمين الوطني",
+                            ValidUntil = new DateTime(2026, 6, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(3019)
+                        },
+                        new
+                        {
+                            Id = new Guid("8474527a-ee75-4135-8c39-a95e8007343e"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(3036),
+                            GroupNumber = "GRP-003",
+                            PolicyNumber = "POL-003-2024",
+                            Provider = "شركة التأمين الشامل",
+                            ValidUntil = new DateTime(2026, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(3035)
+                        },
+                        new
+                        {
+                            Id = new Guid("2f8c17b9-771b-4c77-9b5c-df7ed98ebaa9"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(3039),
+                            GroupNumber = "GRP-004",
+                            PolicyNumber = "POL-004-2024",
+                            Provider = "شركة التأمين الطبي",
+                            ValidUntil = new DateTime(2026, 8, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(3038)
+                        },
+                        new
+                        {
+                            Id = new Guid("4ac49f45-1abf-42ff-93c9-5b682d179e44"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(3041),
+                            GroupNumber = "GRP-005",
+                            PolicyNumber = "POL-005-2024",
+                            Provider = "شركة التأمين المتقدم",
+                            ValidUntil = new DateTime(2026, 2, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(3041)
+                        });
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Invoice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("DiscountAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("InvoiceDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<decimal>("NetAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("PaidDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentNotes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TaxAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
 
                     b.HasIndex("CreatedBy");
+
+                    b.HasIndex("InvoiceNumber")
+                        .IsUnique();
 
                     b.HasIndex("PatientId");
 
@@ -100,18 +3677,43 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<decimal>("Amount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<Guid>("InvoiceId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ItemId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -120,14 +3722,61 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                     b.ToTable("InvoiceItems");
                 });
 
-            modelBuilder.Entity("Al_Eaida_Domin.Modules.MedicalVisit", b =>
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.MedicalRecord", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Diagnosis")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Treatment")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("MedicalRecords");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.MedicalVisit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
                     b.Property<string>("Diagnosis")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("DoctorID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
@@ -144,11 +3793,41 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DoctorID");
+
                     b.HasIndex("PatientId");
 
                     b.HasIndex("UserID");
 
+                    b.HasIndex("VisitDate");
+
                     b.ToTable("MedicalVisits");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.MedicationCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid>("MedicationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("MedicationId");
+
+                    b.ToTable("MedicationCategory");
                 });
 
             modelBuilder.Entity("Al_Eaida_Domin.Modules.Medicine", b =>
@@ -157,60 +3836,398 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("ExpirationDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Barcode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(20,2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Medicines");
-                });
-
-            modelBuilder.Entity("Al_Eaida_Domin.Modules.Patient", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BirthDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Contraindications")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("DosageForm")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GenericName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Instructions")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Manufacturer")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("MinStockLevel")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Gender")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal?>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("MedicalHistory")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("RequiresPrescription")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("SideEffects")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int?>("StockQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Strength")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FullName");
+                    b.ToTable("Medicines");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("5e059efa-f7cf-4ba3-bfef-207133849327"),
+                            Contraindications = "لا يستخدم مع مرضى الكبد",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2706),
+                            Description = "مسكن للآلام وخافض للحرارة",
+                            DosageForm = "Tablet",
+                            ExpiryDate = new DateTime(2027, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2692),
+                            GenericName = "Paracetamol",
+                            Instructions = "يؤخذ مع الطعام",
+                            IsActive = true,
+                            Manufacturer = "شركة الأدوية المصرية",
+                            MinStockLevel = 100,
+                            Name = "باراسيتامول",
+                            Price = 5.50m,
+                            RequiresPrescription = false,
+                            SideEffects = "نادراً ما يسبب حساسية",
+                            StockQuantity = 1000,
+                            Strength = "500mg",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2706)
+                        },
+                        new
+                        {
+                            Id = new Guid("b98043c2-e9c6-49dd-bcaa-b09816a59148"),
+                            Contraindications = "حساسية من البنسلين",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2715),
+                            Description = "مضاد حيوي واسع الطيف",
+                            DosageForm = "Capsule",
+                            ExpiryDate = new DateTime(2028, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2714),
+                            GenericName = "Amoxicillin",
+                            Instructions = "يؤخذ قبل الطعام",
+                            IsActive = true,
+                            Manufacturer = "شركة الأدوية العالمية",
+                            MinStockLevel = 50,
+                            Name = "أموكسيسيلين",
+                            Price = 15.75m,
+                            RequiresPrescription = true,
+                            SideEffects = "قد يسبب اضطراب في المعدة",
+                            StockQuantity = 500,
+                            Strength = "250mg",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2716)
+                        },
+                        new
+                        {
+                            Id = new Guid("69d3f151-8548-4ae5-9f5c-5e6a3fc3dfce"),
+                            Contraindications = "قرحة المعدة",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2722),
+                            Description = "مضاد للالتهاب ومسكن للآلام",
+                            DosageForm = "Tablet",
+                            ExpiryDate = new DateTime(2027, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2721),
+                            GenericName = "Ibuprofen",
+                            Instructions = "يؤخذ مع الطعام",
+                            IsActive = true,
+                            Manufacturer = "شركة الأدوية المتقدمة",
+                            MinStockLevel = 75,
+                            Name = "إيبوبروفين",
+                            Price = 8.25m,
+                            RequiresPrescription = false,
+                            SideEffects = "قد يسبب اضطراب في المعدة",
+                            StockQuantity = 750,
+                            Strength = "400mg",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2722)
+                        },
+                        new
+                        {
+                            Id = new Guid("b363d61f-b5ef-4122-a9fa-ab3bc334b3b6"),
+                            Contraindications = "لا توجد موانع معروفة",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2727),
+                            Description = "مثبط لمضخة البروتون لعلاج قرحة المعدة",
+                            DosageForm = "Capsule",
+                            ExpiryDate = new DateTime(2028, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2726),
+                            GenericName = "Omeprazole",
+                            Instructions = "يؤخذ على معدة فارغة",
+                            IsActive = true,
+                            Manufacturer = "شركة الأدوية الحديثة",
+                            MinStockLevel = 30,
+                            Name = "أوميبرازول",
+                            Price = 12.00m,
+                            RequiresPrescription = true,
+                            SideEffects = "نادراً ما يسبب صداع",
+                            StockQuantity = 300,
+                            Strength = "20mg",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2727)
+                        },
+                        new
+                        {
+                            Id = new Guid("5b5e3fb1-32f0-4b9a-b08e-627a345972e5"),
+                            Contraindications = "أمراض الكلى",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2733),
+                            Description = "دواء لعلاج مرض السكري من النوع الثاني",
+                            DosageForm = "Tablet",
+                            ExpiryDate = new DateTime(2027, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2732),
+                            GenericName = "Metformin",
+                            Instructions = "يؤخذ مع الطعام",
+                            IsActive = true,
+                            Manufacturer = "شركة الأدوية المتخصصة",
+                            MinStockLevel = 40,
+                            Name = "ميتفورمين",
+                            Price = 18.50m,
+                            RequiresPrescription = true,
+                            SideEffects = "قد يسبب اضطراب في المعدة",
+                            StockQuantity = 400,
+                            Strength = "500mg",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2733)
+                        });
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<Guid?>("AppointmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Data")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid?>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<Guid?>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ReadAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Patient", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<Guid?>("AddressId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid?>("EmergencyContactId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("InsuranceInfoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId")
+                        .IsUnique()
+                        .HasFilter("[AddressId] IS NOT NULL");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("EmergencyContactId")
+                        .IsUnique()
+                        .HasFilter("[EmergencyContactId] IS NOT NULL");
+
+                    b.HasIndex("InsuranceInfoId")
+                        .IsUnique()
+                        .HasFilter("[InsuranceInfoId] IS NOT NULL");
+
+                    b.HasIndex("Phone")
+                        .IsUnique();
 
                     b.ToTable("Patients");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("6c7634b4-168a-4447-9482-fcaf7e61f84a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2865),
+                            DateOfBirth = new DateTime(1985, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "ahmed.mohamed@email.com",
+                            FirstName = "أحمد",
+                            FullName = "أحمد محمد",
+                            Gender = "Male",
+                            IsActive = true,
+                            LastName = "محمد",
+                            Phone = "+20 100 111 1111",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2866)
+                        },
+                        new
+                        {
+                            Id = new Guid("d9212d32-f207-415b-9eb9-144fb06a29df"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2871),
+                            DateOfBirth = new DateTime(1990, 8, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "mariam.ali@email.com",
+                            FirstName = "مريم",
+                            FullName = "مريم علي",
+                            Gender = "Female",
+                            IsActive = true,
+                            LastName = "علي",
+                            Phone = "+20 100 333 3333",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2871)
+                        },
+                        new
+                        {
+                            Id = new Guid("f15ddfaf-5a32-40ac-a827-779958a78bbb"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2875),
+                            DateOfBirth = new DateTime(1978, 12, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "youssef.hassan@email.com",
+                            FirstName = "يوسف",
+                            FullName = "يوسف حسن",
+                            Gender = "Male",
+                            IsActive = true,
+                            LastName = "حسن",
+                            Phone = "+20 100 555 5555",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2875)
+                        },
+                        new
+                        {
+                            Id = new Guid("f4c0bf2f-fef6-42a6-af49-a80f7deff24d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2879),
+                            DateOfBirth = new DateTime(1995, 3, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "sara.ahmed@email.com",
+                            FirstName = "سارة",
+                            FullName = "سارة أحمد",
+                            Gender = "Female",
+                            IsActive = true,
+                            LastName = "أحمد",
+                            Phone = "+20 100 777 7777",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2879)
+                        },
+                        new
+                        {
+                            Id = new Guid("cecee327-d554-407a-b28f-3f2880ded9a0"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2885),
+                            DateOfBirth = new DateTime(1982, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "abdullah.mohamed@email.com",
+                            FirstName = "عبدالله",
+                            FullName = "عبدالله محمد",
+                            Gender = "Male",
+                            IsActive = true,
+                            LastName = "محمد",
+                            Phone = "+20 100 999 9999",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2885)
+                        });
                 });
 
             modelBuilder.Entity("Al_Eaida_Domin.Modules.Prescription", b =>
@@ -224,12 +4241,56 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<Guid>("VisitId")
+                    b.Property<Guid>("DoctorId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Dosage")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Frequency")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Instructions")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("MedicalVisitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MedicationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("PrescribedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("VisitId");
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("MedicalVisitId");
+
+                    b.HasIndex("MedicationId");
+
+                    b.HasIndex("PatientId");
 
                     b.ToTable("Prescriptions");
                 });
@@ -238,21 +4299,52 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Dosage")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Duration")
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Frequency")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Instructions")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("MedicineId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<Guid>("PrescriptionId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -263,20 +4355,57 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                     b.ToTable("PrescriptionItems");
                 });
 
-            modelBuilder.Entity("Al_Eaida_Domin.Modules.RefreshToken", b =>
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Receptionist", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<DateTime>("ExpiryDate")
+                    b.Property<string>("Department")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("EmployeeId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("HireDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Token")
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("ProfileImage")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -286,7 +4415,348 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.ToTable("Receptionists");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Report", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Data")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FilePath")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("GeneratedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GeneratedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GeneratedByUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GeneratedByUserId");
+
+                    b.ToTable("Reports");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Specialization", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Specializations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("97ab0c5c-5c80-46d0-9ff6-ed1f9bb826e2"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2377),
+                            Description = "تخصص في أمراض القلب والأوعية الدموية",
+                            IsActive = true,
+                            Name = "طب القلب"
+                        },
+                        new
+                        {
+                            Id = new Guid("93f7e29d-c448-4811-8010-d048733e2c0f"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2381),
+                            Description = "تخصص في علاج الأطفال",
+                            IsActive = true,
+                            Name = "طب الأطفال"
+                        },
+                        new
+                        {
+                            Id = new Guid("c5e56c96-1389-4dca-a199-644203f07607"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2392),
+                            Description = "تخصص في صحة المرأة والحمل والولادة",
+                            IsActive = true,
+                            Name = "طب النساء والولادة"
+                        },
+                        new
+                        {
+                            Id = new Guid("dc927246-79d6-487e-85aa-4ba261e2be94"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2395),
+                            Description = "تخصص في علاج العظام والمفاصل",
+                            IsActive = true,
+                            Name = "طب العظام"
+                        },
+                        new
+                        {
+                            Id = new Guid("a09979c0-f1f8-4e08-8981-9634a4786799"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2397),
+                            Description = "تخصص في علاج أمراض العيون",
+                            IsActive = true,
+                            Name = "طب العيون"
+                        },
+                        new
+                        {
+                            Id = new Guid("32a49a3f-3865-4fe9-b74e-6d19670c9d94"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2400),
+                            Description = "تخصص في علاج أمراض الأنف والأذن والحنجرة",
+                            IsActive = true,
+                            Name = "طب الأنف والأذن والحنجرة"
+                        },
+                        new
+                        {
+                            Id = new Guid("c6b41956-bdce-4a0d-94e7-2afb0420cb89"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2404),
+                            Description = "تخصص في علاج أمراض الجلد",
+                            IsActive = true,
+                            Name = "طب الجلدية"
+                        },
+                        new
+                        {
+                            Id = new Guid("c5aac97b-9d3e-4ed2-8185-0aedc6793851"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2407),
+                            Description = "تخصص في علاج أمراض الجهاز العصبي",
+                            IsActive = true,
+                            Name = "طب الأعصاب"
+                        },
+                        new
+                        {
+                            Id = new Guid("6d9465c1-9f9c-4460-b3ea-91ca8e321d17"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2409),
+                            Description = "تخصص في علاج أمراض الجهاز الهضمي",
+                            IsActive = true,
+                            Name = "طب الجهاز الهضمي"
+                        },
+                        new
+                        {
+                            Id = new Guid("d9ac35ff-ee75-4a64-856e-b515ddb0af94"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2411),
+                            Description = "تخصص في علاج أمراض المسالك البولية",
+                            IsActive = true,
+                            Name = "طب المسالك البولية"
+                        });
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.SystemSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Value")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemSettings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("076a96cb-8f59-4b03-bfce-034ff74cd88d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2475),
+                            Description = "اسم العيادة",
+                            IsActive = true,
+                            Key = "ClinicName",
+                            Type = "String",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2475),
+                            Value = "عيادة العائدة الطبية"
+                        },
+                        new
+                        {
+                            Id = new Guid("9e83bfc3-f6f7-41d8-809c-999cf499ee3d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2478),
+                            Description = "عنوان العيادة",
+                            IsActive = true,
+                            Key = "ClinicAddress",
+                            Type = "String",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2479),
+                            Value = "شارع التحرير، القاهرة، مصر"
+                        },
+                        new
+                        {
+                            Id = new Guid("138ec3fe-b7b2-45ef-a819-6c870b634178"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2486),
+                            Description = "رقم هاتف العيادة",
+                            IsActive = true,
+                            Key = "ClinicPhone",
+                            Type = "String",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2486),
+                            Value = "+20 2 1234 5678"
+                        },
+                        new
+                        {
+                            Id = new Guid("a4eb30e9-69d8-4f61-a271-255b23a5731d"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2489),
+                            Description = "بريد العيادة الإلكتروني",
+                            IsActive = true,
+                            Key = "ClinicEmail",
+                            Type = "String",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2489),
+                            Value = "info@al-eaida-clinic.com"
+                        },
+                        new
+                        {
+                            Id = new Guid("8b6963e8-6218-49ed-935f-eb9a23666343"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2500),
+                            Description = "مدة الموعد الافتراضية بالدقائق",
+                            IsActive = true,
+                            Key = "DefaultAppointmentDuration",
+                            Type = "Integer",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2500),
+                            Value = "30"
+                        },
+                        new
+                        {
+                            Id = new Guid("b57fa2c7-43c9-4946-b0aa-31d812a20c56"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2503),
+                            Description = "الحد الأقصى للمواعيد في اليوم",
+                            IsActive = true,
+                            Key = "MaxAppointmentsPerDay",
+                            Type = "Integer",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2503),
+                            Value = "50"
+                        },
+                        new
+                        {
+                            Id = new Guid("a11da53a-8391-40cb-8f8f-db57cd5784d2"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2506),
+                            Description = "العملة الافتراضية",
+                            IsActive = true,
+                            Key = "DefaultCurrency",
+                            Type = "String",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2506),
+                            Value = "EGP"
+                        },
+                        new
+                        {
+                            Id = new Guid("baa1b750-9be7-4203-b5ba-89530f366c0a"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2509),
+                            Description = "معدل الضريبة المضافة",
+                            IsActive = true,
+                            Key = "TaxRate",
+                            Type = "Decimal",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2509),
+                            Value = "14"
+                        },
+                        new
+                        {
+                            Id = new Guid("3d5502e7-33fe-4481-a072-ac82d46c9e66"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2514),
+                            Description = "رسوم الاستشارة الافتراضية",
+                            IsActive = true,
+                            Key = "DefaultConsultationFee",
+                            Type = "Decimal",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2515),
+                            Value = "200"
+                        },
+                        new
+                        {
+                            Id = new Guid("9c2d2654-9e09-4f85-9ac3-42af84549d3c"),
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2576),
+                            Description = "تفعيل إشعارات البريد الإلكتروني",
+                            IsActive = true,
+                            Key = "EnableEmailNotifications",
+                            Type = "Boolean",
+                            UpdatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 662, DateTimeKind.Utc).AddTicks(2577),
+                            Value = "true"
+                        });
                 });
 
             modelBuilder.Entity("Al_Eaida_Domin.Modules.User", b =>
@@ -319,6 +4789,9 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -368,6 +4841,155 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "14b85371-c6a3-43cc-97ec-585c6e09e623",
+                            AccessFailedCount = 0,
+                            Address = "",
+                            ConcurrencyStamp = "4adfa0f2-3318-42bf-a35b-ab96347da884",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 219, DateTimeKind.Utc).AddTicks(1713),
+                            Email = "admin@al-eaida.com",
+                            EmailConfirmed = true,
+                            IsActive = true,
+                            LockoutEnabled = true,
+                            NormalizedEmail = "ADMIN@AL-EAIDA.COM",
+                            NormalizedUserName = "ADMIN@AL-EAIDA.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPS0kJmuZt+I0SqhnRktMN1zwWdL9JYv11PeyIfzpzIyRdYbNNXldirDow9nNC8Gug==",
+                            Phone = "",
+                            PhoneNumber = "+20 100 000 0000",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "5b392572-34ca-4189-9e07-53eeb53ee810",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@al-eaida.com"
+                        },
+                        new
+                        {
+                            Id = "eeca4a29-b77e-4001-8880-bc962863fbc4",
+                            AccessFailedCount = 0,
+                            Address = "",
+                            ConcurrencyStamp = "96edbf61-0447-40a0-8584-e843c0b46b69",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 219, DateTimeKind.Utc).AddTicks(1789),
+                            Email = "fatma.ali@al-eaida.com",
+                            EmailConfirmed = true,
+                            IsActive = true,
+                            LockoutEnabled = true,
+                            NormalizedEmail = "FATMA.ALI@AL-EAIDA.COM",
+                            NormalizedUserName = "FATMA.ALI@AL-EAIDA.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDCZ160hHEU1L89ToB330yk2ru28r9wEpdnbRBdgx5kbLG3XYPXD4o/nmVH1QAN1oA==",
+                            Phone = "",
+                            PhoneNumber = "+20 100 222 2222",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "8a32c65c-8f84-4184-8d09-b02428b7523f",
+                            TwoFactorEnabled = false,
+                            UserName = "fatma.ali@al-eaida.com"
+                        },
+                        new
+                        {
+                            Id = "f757d17b-6565-47a5-8236-fa1435202704",
+                            AccessFailedCount = 0,
+                            Address = "",
+                            ConcurrencyStamp = "4138111f-79a4-4714-afd8-984e5933ce3e",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 219, DateTimeKind.Utc).AddTicks(1803),
+                            Email = "mariam.hassan@al-eaida.com",
+                            EmailConfirmed = true,
+                            IsActive = true,
+                            LockoutEnabled = true,
+                            NormalizedEmail = "MARIAM.HASSAN@AL-EAIDA.COM",
+                            NormalizedUserName = "MARIAM.HASSAN@AL-EAIDA.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMVeqI6oDW4F3n2H+8gmPd2mDZz1b4dYZDx0iTQGQ2+zWCHUhtTQPLDFF+X4hilddg==",
+                            Phone = "",
+                            PhoneNumber = "+20 100 333 3333",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "f1781aa6-fbc1-493c-a1c5-e393e3db0ec2",
+                            TwoFactorEnabled = false,
+                            UserName = "mariam.hassan@al-eaida.com"
+                        },
+                        new
+                        {
+                            Id = "fef8f13b-e461-411f-b288-e1a3b536f5e5",
+                            AccessFailedCount = 0,
+                            Address = "",
+                            ConcurrencyStamp = "d93f8c40-8815-4eb1-bb20-e8de9bf6fd3f",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 219, DateTimeKind.Utc).AddTicks(1813),
+                            Email = "khaled.ahmed@al-eaida.com",
+                            EmailConfirmed = true,
+                            IsActive = true,
+                            LockoutEnabled = true,
+                            NormalizedEmail = "KHALED.AHMED@AL-EAIDA.COM",
+                            NormalizedUserName = "KHALED.AHMED@AL-EAIDA.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOea/s9/jRo+1692GXuICSoIwpuPkYmy5PTSiBP10zlE2UQvzsMcz+JlJjKTMjeLuA==",
+                            Phone = "",
+                            PhoneNumber = "+20 100 444 4444",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "6fe2fed2-661b-4c5d-b470-51fcedf296b6",
+                            TwoFactorEnabled = false,
+                            UserName = "khaled.ahmed@al-eaida.com"
+                        },
+                        new
+                        {
+                            Id = "875631f9-20c3-4306-ab43-a12de3e258e2",
+                            AccessFailedCount = 0,
+                            Address = "",
+                            ConcurrencyStamp = "09cd505a-4248-437c-8792-aee0677561c4",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 219, DateTimeKind.Utc).AddTicks(1820),
+                            Email = "nour.mohamed@al-eaida.com",
+                            EmailConfirmed = true,
+                            IsActive = true,
+                            LockoutEnabled = true,
+                            NormalizedEmail = "NOUR.MOHAMED@AL-EAIDA.COM",
+                            NormalizedUserName = "NOUR.MOHAMED@AL-EAIDA.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAELHRNc6zcqCzH3YjFGYTS29fTzfeWrEte/aF0iVHHTlF53VkihjvOl1eOBo8KN4PWA==",
+                            Phone = "",
+                            PhoneNumber = "+20 100 555 5555",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "b8ac2d2a-4561-43e9-8d4c-c80fd878a383",
+                            TwoFactorEnabled = false,
+                            UserName = "nour.mohamed@al-eaida.com"
+                        },
+                        new
+                        {
+                            Id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                            AccessFailedCount = 0,
+                            Address = "",
+                            ConcurrencyStamp = "7296ffce-4ff8-42c6-8168-4c08c6796350",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 219, DateTimeKind.Utc).AddTicks(1830),
+                            Email = "receptionist@al-eaida.com",
+                            EmailConfirmed = true,
+                            IsActive = true,
+                            LockoutEnabled = true,
+                            NormalizedEmail = "RECEPTIONIST@AL-EAIDA.COM",
+                            NormalizedUserName = "RECEPTIONIST@AL-EAIDA.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAENds/1cXbOtmuX19X7NdsLunKXAaFfvjeZBSHWPydeeueim83kpZFhI5iMKLvvQfqA==",
+                            Phone = "",
+                            PhoneNumber = "+20 100 666 6666",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "be11276e-eb60-4f89-91d2-86f5e6060b89",
+                            TwoFactorEnabled = false,
+                            UserName = "receptionist@al-eaida.com"
+                        },
+                        new
+                        {
+                            Id = "b2c3d4e5-f6g7-8901-bcde-f23456789012",
+                            AccessFailedCount = 0,
+                            Address = "",
+                            ConcurrencyStamp = "970ce5b2-f101-4451-8ab5-617f050b59d7",
+                            CreatedAt = new DateTime(2025, 10, 7, 17, 39, 52, 219, DateTimeKind.Utc).AddTicks(1939),
+                            Email = "accountant@al-eaida.com",
+                            EmailConfirmed = true,
+                            IsActive = true,
+                            LockoutEnabled = true,
+                            NormalizedEmail = "ACCOUNTANT@AL-EAIDA.COM",
+                            NormalizedUserName = "ACCOUNTANT@AL-EAIDA.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIRqTww7cZHKR/SZ+7S/w9hlTMTF7rXkK42RAPTDURzdJh55FvgW79dilhIfHA/a1w==",
+                            Phone = "",
+                            PhoneNumber = "+20 100 777 7777",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "019e1023-5c3d-4fa9-9592-9bfa2a796419",
+                            TwoFactorEnabled = false,
+                            UserName = "accountant@al-eaida.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -399,25 +5021,25 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ef21745a-30d0-4830-8c84-6e8c6c534147",
+                            Id = "f2d14089-a797-4493-be63-4a9c80570235",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "05d735eb-e134-4037-b9aa-61dcfab14267",
+                            Id = "4ecb10a6-d9c8-41ec-8577-8256e3d38608",
                             Name = "Doctor",
                             NormalizedName = "DOCTOR"
                         },
                         new
                         {
-                            Id = "17b2ebb5-23f5-4e4a-b7a2-e9e52596cc41",
+                            Id = "7626c860-20d2-4402-bb4b-c8a0d067201e",
                             Name = "Receptionist",
                             NormalizedName = "RECEPTIONIST"
                         },
                         new
                         {
-                            Id = "ffc1032a-baf1-4b0d-96cf-10fa064a48e7",
+                            Id = "f5cea4e7-e825-4663-9586-bfb7a68a58d0",
                             Name = "Accountant ",
                             NormalizedName = "ACCOUNTANT "
                         });
@@ -508,6 +5130,43 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "14b85371-c6a3-43cc-97ec-585c6e09e623",
+                            RoleId = "f2d14089-a797-4493-be63-4a9c80570235"
+                        },
+                        new
+                        {
+                            UserId = "eeca4a29-b77e-4001-8880-bc962863fbc4",
+                            RoleId = "4ecb10a6-d9c8-41ec-8577-8256e3d38608"
+                        },
+                        new
+                        {
+                            UserId = "f757d17b-6565-47a5-8236-fa1435202704",
+                            RoleId = "4ecb10a6-d9c8-41ec-8577-8256e3d38608"
+                        },
+                        new
+                        {
+                            UserId = "fef8f13b-e461-411f-b288-e1a3b536f5e5",
+                            RoleId = "4ecb10a6-d9c8-41ec-8577-8256e3d38608"
+                        },
+                        new
+                        {
+                            UserId = "875631f9-20c3-4306-ab43-a12de3e258e2",
+                            RoleId = "4ecb10a6-d9c8-41ec-8577-8256e3d38608"
+                        },
+                        new
+                        {
+                            UserId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                            RoleId = "7626c860-20d2-4402-bb4b-c8a0d067201e"
+                        },
+                        new
+                        {
+                            UserId = "b2c3d4e5-f6g7-8901-bcde-f23456789012",
+                            RoleId = "f5cea4e7-e825-4663-9586-bfb7a68a58d0"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -529,13 +5188,44 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Address", b =>
+                {
+                    b.HasOne("Al_Eaida_Domin.Modules.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Al_Eaida_Domin.Modules.City", null)
+                        .WithMany("Addresses")
+                        .HasForeignKey("CityId1");
+
+                    b.HasOne("Al_Eaida_Domin.Modules.Governorate", "Governorate")
+                        .WithMany()
+                        .HasForeignKey("GovernorateId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("City");
+
+                    b.Navigation("Governorate");
+                });
+
             modelBuilder.Entity("Al_Eaida_Domin.Modules.Appointment", b =>
                 {
+                    b.HasOne("Al_Eaida_Domin.Modules.Doctor", "Doctor")
+                        .WithMany("Appointments")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Al_Eaida_Domin.Modules.Patient", "Patient")
                         .WithMany("Appointments")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Al_Eaida_Domin.Modules.Receptionist", null)
+                        .WithMany("ManagedAppointments")
+                        .HasForeignKey("ReceptionistId");
 
                     b.HasOne("Al_Eaida_Domin.Modules.User", "User")
                         .WithMany("Appointments")
@@ -543,28 +5233,92 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Doctor");
+
                     b.Navigation("Patient");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Al_Eaida_Domin.Modules.Invoice", b =>
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.AuditLog", b =>
                 {
                     b.HasOne("Al_Eaida_Domin.Modules.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.City", b =>
+                {
+                    b.HasOne("Al_Eaida_Domin.Modules.Governorate", "Governorate")
+                        .WithMany("Cities")
+                        .HasForeignKey("GovernorateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Governorate");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Doctor", b =>
+                {
+                    b.HasOne("Al_Eaida_Domin.Modules.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.DoctorSchedule", b =>
+                {
+                    b.HasOne("Al_Eaida_Domin.Modules.Doctor", "Doctor")
+                        .WithMany("Schedules")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.DoctorSpecialization", b =>
+                {
+                    b.HasOne("Al_Eaida_Domin.Modules.Doctor", "Doctor")
+                        .WithMany("DoctorSpecializations")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Al_Eaida_Domin.Modules.Specialization", "Specialization")
+                        .WithMany("DoctorSpecializations")
+                        .HasForeignKey("SpecializationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Specialization");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Invoice", b =>
+                {
+                    b.HasOne("Al_Eaida_Domin.Modules.User", "CreatedByUser")
                         .WithMany("CreatedInvoices")
                         .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Al_Eaida_Domin.Modules.Patient", "Patient")
                         .WithMany("Invoices")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Patient");
+                    b.Navigation("CreatedByUser");
 
-                    b.Navigation("User");
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("Al_Eaida_Domin.Modules.InvoiceItem", b =>
@@ -578,34 +5332,155 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                     b.Navigation("Invoice");
                 });
 
-            modelBuilder.Entity("Al_Eaida_Domin.Modules.MedicalVisit", b =>
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.MedicalRecord", b =>
                 {
+                    b.HasOne("Al_Eaida_Domin.Modules.Doctor", "Doctor")
+                        .WithMany("MedicalRecords")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Al_Eaida_Domin.Modules.Patient", "Patient")
-                        .WithMany("MedicalVisits")
+                        .WithMany("MedicalHistory")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Al_Eaida_Domin.Modules.User", "user")
-                        .WithMany("medicalVisits")
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.MedicalVisit", b =>
+                {
+                    b.HasOne("Al_Eaida_Domin.Modules.Doctor", "Doctor")
+                        .WithMany("MedicalVisits")
+                        .HasForeignKey("DoctorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Al_Eaida_Domin.Modules.Patient", "Patient")
+                        .WithMany("MedicalVisits")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Al_Eaida_Domin.Modules.User", "User")
+                        .WithMany("MedicalVisits")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Doctor");
+
                     b.Navigation("Patient");
 
-                    b.Navigation("user");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.MedicationCategory", b =>
+                {
+                    b.HasOne("Al_Eaida_Domin.Modules.Category", "Category")
+                        .WithMany("MedicationCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Al_Eaida_Domin.Modules.Medicine", "Medication")
+                        .WithMany("MedicationCategories")
+                        .HasForeignKey("MedicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Medication");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Notification", b =>
+                {
+                    b.HasOne("Al_Eaida_Domin.Modules.Appointment", "Appointment")
+                        .WithMany()
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Al_Eaida_Domin.Modules.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Al_Eaida_Domin.Modules.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Al_Eaida_Domin.Modules.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Appointment");
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Patient", b =>
+                {
+                    b.HasOne("Al_Eaida_Domin.Modules.Address", "Address")
+                        .WithOne()
+                        .HasForeignKey("Al_Eaida_Domin.Modules.Patient", "AddressId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Al_Eaida_Domin.Modules.EmergencyContact", "EmergencyContact")
+                        .WithOne()
+                        .HasForeignKey("Al_Eaida_Domin.Modules.Patient", "EmergencyContactId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Al_Eaida_Domin.Modules.InsuranceInfo", "InsuranceInfo")
+                        .WithOne()
+                        .HasForeignKey("Al_Eaida_Domin.Modules.Patient", "InsuranceInfoId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Address");
+
+                    b.Navigation("EmergencyContact");
+
+                    b.Navigation("InsuranceInfo");
                 });
 
             modelBuilder.Entity("Al_Eaida_Domin.Modules.Prescription", b =>
                 {
-                    b.HasOne("Al_Eaida_Domin.Modules.MedicalVisit", "Visit")
-                        .WithMany("Prescriptions")
-                        .HasForeignKey("VisitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Al_Eaida_Domin.Modules.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Visit");
+                    b.HasOne("Al_Eaida_Domin.Modules.MedicalVisit", null)
+                        .WithMany("Prescriptions")
+                        .HasForeignKey("MedicalVisitId");
+
+                    b.HasOne("Al_Eaida_Domin.Modules.Medicine", "Medication")
+                        .WithMany("Prescriptions")
+                        .HasForeignKey("MedicationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Al_Eaida_Domin.Modules.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Medication");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("Al_Eaida_Domin.Modules.PrescriptionItem", b =>
@@ -613,11 +5488,11 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                     b.HasOne("Al_Eaida_Domin.Modules.Medicine", "Medicine")
                         .WithMany("PrescriptionItems")
                         .HasForeignKey("MedicineId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Al_Eaida_Domin.Modules.Prescription", "Prescription")
-                        .WithMany("Items")
+                        .WithMany("PrescriptionItems")
                         .HasForeignKey("PrescriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -625,6 +5500,17 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                     b.Navigation("Medicine");
 
                     b.Navigation("Prescription");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Receptionist", b =>
+                {
+                    b.HasOne("Al_Eaida_Domin.Modules.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Al_Eaida_Domin.Modules.RefreshToken", b =>
@@ -636,6 +5522,15 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Report", b =>
+                {
+                    b.HasOne("Al_Eaida_Domin.Modules.User", "GeneratedByUser")
+                        .WithMany()
+                        .HasForeignKey("GeneratedByUserId");
+
+                    b.Navigation("GeneratedByUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -689,6 +5584,34 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Category", b =>
+                {
+                    b.Navigation("MedicationCategories");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.City", b =>
+                {
+                    b.Navigation("Addresses");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Doctor", b =>
+                {
+                    b.Navigation("Appointments");
+
+                    b.Navigation("DoctorSpecializations");
+
+                    b.Navigation("MedicalRecords");
+
+                    b.Navigation("MedicalVisits");
+
+                    b.Navigation("Schedules");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Governorate", b =>
+                {
+                    b.Navigation("Cities");
+                });
+
             modelBuilder.Entity("Al_Eaida_Domin.Modules.Invoice", b =>
                 {
                     b.Navigation("Items");
@@ -701,7 +5624,11 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
 
             modelBuilder.Entity("Al_Eaida_Domin.Modules.Medicine", b =>
                 {
+                    b.Navigation("MedicationCategories");
+
                     b.Navigation("PrescriptionItems");
+
+                    b.Navigation("Prescriptions");
                 });
 
             modelBuilder.Entity("Al_Eaida_Domin.Modules.Patient", b =>
@@ -710,12 +5637,24 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
 
                     b.Navigation("Invoices");
 
+                    b.Navigation("MedicalHistory");
+
                     b.Navigation("MedicalVisits");
                 });
 
             modelBuilder.Entity("Al_Eaida_Domin.Modules.Prescription", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("PrescriptionItems");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Receptionist", b =>
+                {
+                    b.Navigation("ManagedAppointments");
+                });
+
+            modelBuilder.Entity("Al_Eaida_Domin.Modules.Specialization", b =>
+                {
+                    b.Navigation("DoctorSpecializations");
                 });
 
             modelBuilder.Entity("Al_Eaida_Domin.Modules.User", b =>
@@ -724,9 +5663,9 @@ namespace AL_Eaida_Infrastructure__Layer.Migrations
 
                     b.Navigation("CreatedInvoices");
 
-                    b.Navigation("RefreshTokens");
+                    b.Navigation("MedicalVisits");
 
-                    b.Navigation("medicalVisits");
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

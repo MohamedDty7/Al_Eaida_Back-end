@@ -57,9 +57,12 @@ namespace Al_Eaida.Controllers
             return Ok("تم حذف الزيارة الطبية بنجاح");
         }
         [HttpGet("GetMedicalVisitsByPatientId/{patientId}")]
-        public async Task<IActionResult> GetMedicalVisitsByPatientId(Guid patientId)
+        public async Task<IActionResult> GetMedicalVisitsByPatientId(string patientId)
         {
-            var medicalVisits = await _medicalVisitServices.GetMedicalVisitsByPatientIdAsync(patientId);
+            if (!Guid.TryParse(patientId, out Guid patientGuid))
+                return BadRequest("Invalid patient ID format");
+                
+            var medicalVisits = await _medicalVisitServices.GetMedicalVisitsByPatientIdAsync(patientGuid);
             if (medicalVisits == null || !medicalVisits.Any())
             {
                 return NotFound("لا توجد زيارات طبية لهذا المريض");

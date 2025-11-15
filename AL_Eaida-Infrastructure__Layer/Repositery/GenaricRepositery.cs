@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-
+using System.Linq.Expressions;
 using Al_Eaida_Domin.Interface;
 namespace AL_Eaida_Infrastructure__Layer.IRepositery
 {
     public class GenaricRepositery<T> : IGenaricRepositery<T> where T : class
     {
-        private readonly DbContext _context;
+        protected readonly DbContext _context;
         private readonly DbSet<T> _dbSet;
 
         public GenaricRepositery(DbContext context)
@@ -25,6 +25,11 @@ namespace AL_Eaida_Infrastructure__Layer.IRepositery
         public async Task<T?> GetByIdAsync(object id)
         {
             return await _dbSet.FindAsync(id);
+        }
+
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.FirstOrDefaultAsync(predicate);
         }
 
         public async Task AddAsync(T entity)

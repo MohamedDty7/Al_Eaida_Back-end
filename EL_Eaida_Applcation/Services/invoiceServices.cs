@@ -90,8 +90,8 @@ namespace EL_Eaida_Applcation.Services
             if (!string.IsNullOrWhiteSpace(updateDto.PaymentMethod))
                 invoice.PaymentMethod = updateDto.PaymentMethod;
 
-            if (updateDto.PatientId != Guid.Empty)
-                invoice.PatientId = updateDto.PatientId;
+            if (updateDto.PatientId.HasValue)
+                invoice.PatientId = updateDto.PatientId.Value;
 
             if (!string.IsNullOrWhiteSpace(updateDto.CreatedBy))
                 invoice.CreatedBy = updateDto.CreatedBy;

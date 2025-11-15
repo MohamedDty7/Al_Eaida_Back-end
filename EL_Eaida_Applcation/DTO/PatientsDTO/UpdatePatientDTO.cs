@@ -9,14 +9,17 @@ namespace EL_Eaida_Applcation.DTO.PatientsDTO
     public class UpdatePatientDTO
     {
         public Guid Id { get; set; } // ضروري لتحديد المريض
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
         public string? FullName { get; set; }
+        public string? Email { get; set; }
         public string? Phone { get; set; }
-        public string? Address { get; set; }
-        public string? MedicalHistory { get; set; }
-        public string? BirthDate { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-
+        public DateOnly? DateOfBirth { get; set; }
         public string? Gender { get; set; }
+        public Guid? AddressId { get; set; }
+        public Guid? EmergencyContactId { get; set; }
+        public Guid? InsuranceInfoId { get; set; }
+        public bool? IsActive { get; set; }
     }
 }
 

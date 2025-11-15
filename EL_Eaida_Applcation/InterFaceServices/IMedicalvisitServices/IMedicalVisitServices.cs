@@ -12,7 +12,7 @@ namespace EL_Eaida_Applcation.InterFaceServices.IMedicalvisitServices
         Task<IEnumerable<MedicalVisitDto>> GetAllMedicalVisitsAsync(int pagesize, int pagenumber);
         Task<MedicalVisitDto> GetMedicalVisitByIdAsync(Guid id);
         Task CreateMedicalVisitAsync(CreateMedicalVisitDto createMedicalVisitDto);
-        Task<MedicalVisitDto> UpdateMedicalVisitAsync(UpdateMedicalVisitDto updateMedicalVisitDto);
+        Task<MedicalVisitDto?> UpdateMedicalVisitAsync(UpdateMedicalVisitDto updateMedicalVisitDto);
         Task<bool> DeleteMedicalVisitAsync(Guid id);
         Task<List<MedicalVisitDto>> GetMedicalVisitsByPatientIdAsync(Guid patientId);
     }

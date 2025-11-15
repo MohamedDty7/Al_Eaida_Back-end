@@ -12,7 +12,11 @@ namespace EL_Eaida_Applcation.DTO.AppointmentDTO
         public DateTime? AppointmentDate { get; set; }
         public string? Notes { get; set; }
         public string? Status { get; set; }
+        public string? Time { get; set; }
+        public string? Type { get; set; } // نوع الموعد
+        public int? Duration { get; set; } // مدة الموعد بالدقائق
         public Guid? PatientId { get; set; }
+        public Guid? DoctorId { get; set; }
         public string? UserID { get; set; }
     }
 

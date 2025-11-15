@@ -56,7 +56,7 @@ namespace EL_Eaida_Applcation.Services
             return prescriptionItemDto;
         }
 
-        public async Task<List<PrescriptionItemDto>> GetPrescriptionItemsByVisitIdAsync(Guid MedicineId)
+        public async Task<List<PrescriptionItemDto>> GetPrescriptionItemsByMedicineIdAsync(Guid MedicineId)
         {
             var prescriptionItems = await _unitOfWork.Repository<PrescriptionItem>().GetAllAsync(1, int.MaxValue);
             var filteredItems = prescriptionItems.Where(pi => pi.MedicineId == MedicineId).ToList();
@@ -70,22 +70,20 @@ namespace EL_Eaida_Applcation.Services
             if (prescriptionItem == null) return false;
             if (updatePrescriptionItemDto.PrescriptionId.HasValue)
                 prescriptionItem.PrescriptionId = updatePrescriptionItemDto.PrescriptionId.Value;
+                
             if (!string.IsNullOrWhiteSpace(updatePrescriptionItemDto.Dosage))
             {
                 prescriptionItem.Dosage = updatePrescriptionItemDto.Dosage;
-
             }
-            if (!string.IsNullOrWhiteSpace(updatePrescriptionItemDto.Duration))
+            
+            if (updatePrescriptionItemDto.Duration.HasValue)
             {
-                prescriptionItem.Duration = updatePrescriptionItemDto.Duration;
+                prescriptionItem.Duration = updatePrescriptionItemDto.Duration.Value;
             }
-            if (updatePrescriptionItemDto.PrescriptionId != null)
+            
+            if (updatePrescriptionItemDto.MedicineId.HasValue)
             {
-                prescriptionItem.PrescriptionId = updatePrescriptionItemDto.PrescriptionId.Value;
-            }
-            if (updatePrescriptionItemDto.MedicineId != null)
-            {
-                prescriptionItem.MedicineId = updatePrescriptionItemDto.MedicineId;
+                prescriptionItem.MedicineId = updatePrescriptionItemDto.MedicineId.Value;
             }
             await _unitOfWork.Repository<PrescriptionItem>().Update(prescriptionItem);
             await _unitOfWork.CompleteAsync();

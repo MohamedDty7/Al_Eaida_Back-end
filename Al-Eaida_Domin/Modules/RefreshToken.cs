@@ -8,12 +8,12 @@ namespace Al_Eaida_Domin.Modules
 {
     public class RefreshToken
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        public string UserId { get; set; }      
-        public string Token { get; set; }
+        public string UserId { get; set; } = string.Empty;      
+        public string Token { get; set; } = string.Empty;
         public DateTime ExpiryDate { get; set; }
 
-        public virtual User User { get; set; }  
+        public virtual User User { get; set; } = null!;  
     }
 }

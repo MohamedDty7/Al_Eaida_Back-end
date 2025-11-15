@@ -13,7 +13,7 @@ namespace EL_Eaida_Applcation.InterFaceServices.IPresciptionitemServices
         Task<bool> DeletePrescriptionItemAsync(Guid id);
         Task<IEnumerable<PrescriptionItemDto>> GetAllPrescriptionItemsAsync(int pageSize, int pageNumber);
         Task<PrescriptionItemDto> GetPrescriptionItemByIdAsync(Guid id);
-        Task<List<PrescriptionItemDto>> GetPrescriptionItemsByVisitIdAsync(Guid MedicineId);
+        Task<List<PrescriptionItemDto>> GetPrescriptionItemsByMedicineIdAsync(Guid MedicineId);
         Task<bool> UpdatePrescriptionItemAsync(UpdatePrescriptionItemDto updatePrescriptionItemDto);
     }
 }

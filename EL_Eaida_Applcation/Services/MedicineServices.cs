@@ -66,10 +66,10 @@ namespace EL_Eaida_Applcation.Services
                 medicine.Name = dto.Name;
 
             if (dto.Quantity > 0)
-                medicine.Quantity = dto.Quantity;
+                medicine.StockQuantity = dto.Quantity;
 
             if (dto.ExpirationDate.HasValue)
-                medicine.ExpirationDate = dto.ExpirationDate.Value;
+                //medicine.ExpirationD = dto.ExpirationDate.Value;
 
             if (dto.Price > 0)
                 medicine.Price = dto.Price;

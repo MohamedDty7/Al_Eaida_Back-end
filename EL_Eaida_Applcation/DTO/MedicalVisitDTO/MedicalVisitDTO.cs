@@ -14,10 +14,11 @@ namespace EL_Eaida_Applcation.DTO.MedicalVisitDTO
         public string? Notes { get; set; }
 
         public Guid PatientId { get; set; }
-        public string PatientName { get; set; }
+        public string PatientName { get; set; } = string.Empty;
 
-        public string UserID { get; set; }
-        public string DoctorName { get; set; }
+        public string UserID { get; set; } = string.Empty;
+        public string DoctorID { get; set; } = string.Empty;
+        public string DoctorName { get; set; } = string.Empty;
     }
 
 }

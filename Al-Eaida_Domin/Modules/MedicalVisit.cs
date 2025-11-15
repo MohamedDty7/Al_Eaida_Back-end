@@ -16,11 +16,14 @@ namespace Al_Eaida_Domin.Modules
         public string? Notes { get; set; }
 
         public Guid PatientId { get; set; }
-        public virtual Patient Patient { get; set; }
+        public virtual Patient Patient { get; set; } = null!;
 
-        public string UserID { get; set; }
-        public  virtual User user { get; set; }
+        public string UserID { get; set; } = string.Empty;
+        public virtual User User { get; set; } = null!;
 
-        public virtual ICollection<Prescription> Prescriptions { get; set; }
+        public Guid DoctorID { get; set; }
+        public virtual Doctor Doctor { get; set; } = null!;
+
+        public virtual ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
     }
 }

@@ -15,6 +15,10 @@ namespace EL_Eaida_Applcation.DTO.UserDTo
         public string UserName { get; set; }
         public string? Address { get; set; }
         public string Phone { get; set; }
+        public List<string> Role { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? LastLoginAt { get; set; }
     }
 
 }

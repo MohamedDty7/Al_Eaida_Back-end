@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Configuration; // Add this namespace to resolve IConfiguration
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,11 +31,20 @@ builder.Services.AddDbContext<AppDBcontext>(options =>
 // 3. Add Identity + EF
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
+    // Password settings
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 8;
     options.Password.RequireNonAlphanumeric = false;
+    
+    // User settings - Allow Arabic characters and special symbols
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ءابتثجحخدذرزسشصضطظعغفقكلمنهوي";
+    options.User.RequireUniqueEmail = true;
+    
+    // SignIn settings
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
 })
 .AddEntityFrameworkStores<AppDBcontext>()
 .AddDefaultTokenProviders();
@@ -69,12 +80,20 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices(builder.Configuration);
 
-// 7. CORS
+// 7. CORS - Frontend policy with credentials
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("Frontend", policy =>
     {
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        policy
+            .WithOrigins(
+                "http://localhost:4200",
+                "http://localhost:57957",
+                "http://localhost:61460"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -104,6 +123,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// 9. Add SignalR
+builder.Services.AddSignalR();
+builder.Services.AddScoped<Al_Eaida_Domin.Interface.INotificationRepository, AL_Eaida_Infrastructure__Layer.Repositery.NotificationRepository.NotificationRepository>();
+builder.Services.AddScoped<EL_Eaida_Applcation.InterFaceServices.INotificationService, WebApplication1.Services.NotificationService>();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -111,19 +135,20 @@ var app = builder.Build();
 // Middleware pipeline
 if (app.Environment.IsDevelopment())
 {
-   
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowAll");
+// Apply CORS before auth and endpoints
+app.UseCors("Frontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
-
+// Map endpoints with CORS requirement
+app.MapControllers().RequireCors("Frontend");
+app.MapHub<WebApplication1.Hubs.NotificationHub>("/notificationHub").RequireCors("Frontend");
 
 app.Run();

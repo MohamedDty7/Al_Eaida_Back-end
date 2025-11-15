@@ -57,10 +57,10 @@ namespace EL_Eaida_Applcation.Services
             return prescriptionDto;
         }
 
-        public async Task<IEnumerable<PrescriptionDto>> GetPrescriptionsByVisitIdAsync(Guid visitId)
+        public async Task<IEnumerable<PrescriptionDto>> GetPrescriptionsByPatientIdAsync(Guid patientId)
         {
             var allPrescriptions = await _unitOfWork.Repository<Prescription>().GetAllAsync(1, int.MaxValue);
-            var filtered = allPrescriptions.Where(p => p.VisitId == visitId).ToList();
+            var filtered = allPrescriptions.Where(p => p.PatientId == patientId).ToList();
             return _mapper.Map<IEnumerable<PrescriptionDto>>(filtered);
 
         }
@@ -71,8 +71,14 @@ namespace EL_Eaida_Applcation.Services
             if (prescription == null) return null;
 
             
-            if (dto.VisitId.HasValue)
-                prescription.VisitId = dto.VisitId.Value;
+            if (dto.PatientId.HasValue)
+                prescription.PatientId = dto.PatientId.Value;
+
+            if (dto.DoctorId.HasValue)
+                prescription.DoctorId = dto.DoctorId.Value;
+
+            if (dto.MedicationId.HasValue)
+                prescription.MedicationId = dto.MedicationId.Value;
 
            await  _unitOfWork.Repository<Prescription>().Update(prescription);
             await _unitOfWork.CompleteAsync();

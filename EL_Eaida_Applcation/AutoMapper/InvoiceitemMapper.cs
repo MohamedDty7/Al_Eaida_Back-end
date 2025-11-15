@@ -14,9 +14,17 @@ namespace EL_Eaida_Applcation.AutoMapper
         public InvoiceitemMapper()
         {
             CreateMap<InvoiceItem, InvoiceItemDto>();
-            CreateMap<CreateInvoiceItemDto, InvoiceItem>();
+            
+            CreateMap<CreateInvoiceItemDto, InvoiceItem>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Invoice, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
+                
             CreateMap<UpdateInvoiceItemDto, InvoiceItem>()
-            .ForAllMembers(opt => opt.Condition((src, dest, value) => value != null));
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Invoice, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForAllMembers(opt => opt.Condition((src, dest, value) => value != null));
         }
     }
 }

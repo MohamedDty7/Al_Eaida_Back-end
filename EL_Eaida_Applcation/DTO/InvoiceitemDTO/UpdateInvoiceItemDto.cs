@@ -10,7 +10,12 @@ namespace EL_Eaida_Applcation.DTO.InvoiceitemDTO
     {
         public Guid Id { get; set; }
         public string? Description { get; set; }
+        public int? Quantity { get; set; }
+        public decimal? UnitPrice { get; set; }
         public decimal? Amount { get; set; }
+        public string? ItemType { get; set; }
+        public string? ItemId { get; set; }
+        public string? Notes { get; set; }
     }
 
 }

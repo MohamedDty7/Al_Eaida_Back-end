@@ -10,8 +10,13 @@ namespace EL_Eaida_Applcation.DTO.AppointmentDTO
     {
         public DateTime AppointmentDate { get; set; }
         public string? Notes { get; set; }
+        public string Time { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty; // نوع الموعد
+        public int Duration { get; set; } = 30; // مدة الموعد بالدقائق
         public Guid PatientId { get; set; }
-        public string UserID { get; set; }
+        public Guid DoctorId { get; set; }
+        public string UserID { get; set; } = string.Empty;
+        public string Status { get; set; } = "في_الانتظار";
     }
 
 }
