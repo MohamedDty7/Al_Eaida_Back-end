@@ -15,6 +15,7 @@ namespace Al_Eaida_Domin.Modules
         public DateTime? LastLoginAt { get; set; }
         public string Phone { get; set; } = string.Empty;
 
+
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
         public virtual ICollection<MedicalVisit> MedicalVisits { get; set; } = new List<MedicalVisit>();
         public virtual ICollection<Invoice> CreatedInvoices { get; set; } = new List<Invoice>();
